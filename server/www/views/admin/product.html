@@ -1,0 +1,177 @@
+<section class="content-header">
+      <h1>
+        Product
+      </h1>
+	<ol class="breadcrumb">
+        <li><a ui-sref="app.user.vendor({usertype: user.usertype,userid:user.id,vendorid:vendor.id})"><i class="fa fa-male"></i> {{vendor.name}}</a></li>
+        <li class="active">Product</li>
+     </ol>
+</section>
+<section class="content">
+      <div class="row">
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+			 <div class="box box-warning">
+	            <div class="box-body box-profile">
+				        <img ngf-thumbnail="product.image ||'/www/images/noimage.jpg'" class="profile-user-img img-responsive img-circle" alt="Product profile picture">
+	              <h3 class="profile-username text-center">{{product.name}}</h3>
+
+	              <p class="text-center"><a ui-sref="app.user.vendor({usertype: user.usertype,userid:user.id,vendorid:vendor.id})" >{{vendor.name}}</a></p>
+
+	              <ul class="list-group list-group-unbordered">
+	                <li class="list-group-item">
+	                  <b>Category</b> <a class="pull-right">{{product.type}}</a>
+	                </li>
+	                <li class="list-group-item">
+	                  <b>Subcategory</b> <a class="pull-right">{{product.subcategory}}</a>
+	                </li>
+	                <li class="list-group-item">
+	                  <b>Measure Unit</b> <a class="pull-right">{{product.model}}</a>
+	                </li>
+	                <li class="list-group-item" ng-show="showNewInventoryForm==false">
+	                  <button class="btn btn-primary btn-block" ng-show="showNewInventoryForm==false" ng-click="newInventory()"><b>Add Inventory</b></button>
+	                </li>
+
+	                <li class="list-group-item" ng-show="showNewInventoryForm==true">
+	              		<form class="form-horizontal" ng-submit="addInventory(newinventory)" ng-show="showNewInventoryForm==true">
+
+			              <h3 class="text-center">New Inventory Item</h3>
+			              <hr>
+		                  <div class="form-group">
+		                    <label for="inputExperience" class="col-sm-2 control-label" >Serial Number</label>
+
+		                    <div class="col-sm-10">
+		                      <input type="text" class="form-control" ng-model="newinventory.serialnumber" required/>
+		                    </div>
+		                  </div>
+
+		                  <div class="form-group">
+		                    <label for="inputExperience" class="col-sm-2 control-label">Unit Price</label>
+
+		                    <div class="col-sm-10">
+		                      <input type="text" class="form-control" ng-model="newinventory.unitprice" required/>
+		                    </div>
+		                  </div>
+
+		                  <div class="form-group">
+		                    <label for="inputExperience" class="col-sm-2 control-label">Restock</label>
+
+		                    <div class="col-sm-10">
+		                      <input type="text" class="form-control" ng-model="newinventory.restock" required/>
+		                    </div>
+		                  </div>
+
+		                  <div class="form-group">
+		                    <label for="inputExperience" class="col-sm-2 control-label">Instock</label>
+
+		                    <div class="col-sm-10">
+		                      <input type="text" class="form-control" ng-model="newinventory.instock" required/>
+		                    </div>
+		                  </div>
+		                  <div class="form-group">
+		                  	<div class="col-sm-5"><button type="submit" class="btn btn-success btn-block">Save</button></div>
+		                    <div class="col-sm-5"><button type="button" class="btn btn-warning btn-block" ng-click="cancelNewInventory()">Cancel</button></div>
+		                  </div>
+			              </form>
+	                </li>
+	              </ul>
+	            </div>
+	          </div>
+          </div>
+        <div class="col-lg-8 col-md-9 col-sm-12 col-xs-12">
+          <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+              <li class="active"><a showtab="" href="#inventory" data-toggle="tab" aria-expanded="true">Inventory</a></li>
+              <li class=""><a showtab="" href="#settings" data-toggle="tab" aria-expanded="false">Settings</a></li>
+            </ul>
+            <div class="tab-content">
+              <div class="tab-pane active" id="inventory">
+	              <div class="table-responsive">
+	                <table class="table no-margin">
+	                  <thead>
+	                  <tr>
+	                  	<th>Serial number</th>
+	                    <th>Unit price</th>
+	                    <th>Restock</th>
+	                    <th>Instock</th>
+	                    <th>Active</th>
+	                    <th>&nbsp;</th>
+	                  </tr>
+	                  </thead>
+	                  <tbody>
+	                  <tr ng-repeat="inventory in inventories">
+	                    <td><input type="text" ng-readonly="inventory.readonly==true" class="form-control" ng-model="inventory.serialnumber" /></td>
+	                    <td><input type="text" ng-readonly="inventory.readonly==true" class="form-control" ng-model="inventory.unitprice" /></td>
+	                    <td><input type="text" ng-readonly="inventory.readonly==true" class="form-control" ng-model="inventory.restock" /></td>
+	                    <td><input type="text" ng-readonly="inventory.readonly==true" class="form-control" ng-model="inventory.instock" /></td>
+	                    <td><input type="checkbox" ng-disabled="inventory.readonly==true" class="" ng-model="inventory.isdeleted" ng-true-value="0" ng-false-value="1"/></td>
+	                    <td>
+	                    	<button type="button" ng-show="inventory.readonly==true" ng-click="editInventory(inventory)">Edit</button>&nbsp;
+	                    	<button type="button" ng-show="inventory.readonly==false" ng-click="updateInventory(inventory)">Update</button>&nbsp;
+	                    	<button type="button" ng-show="inventory.readonly==false" ng-click="cancelEditInventory(inventory)">Cancel</button>
+	                    </td>
+	                  </tr>
+	                  </tbody>
+	                </table>
+	              </div>
+              </div>
+              <!-- /.tab-pane -->
+
+              <div class="tab-pane" id="settings">
+                <div class="row" style="margin-bottom:10px">
+                <div class="col-md-2">&nbsp;</div>
+                <div class="col-md-4">
+            		  <div class="button" ngf-select ng-model="file" name="file" ngf-pattern="'image/*'"
+            		    ngf-accept="'image/*'" ngf-max-size="1MB" ngf-change="editImage(file)" >
+            		    	<img ngf-thumbnail="file || product.image ||'/www/images/noimage.jpg'" class="img-responsive">
+            		    </div>
+                </div>
+              	</div>
+                <div class="row" ng-show="isImageUpdated" style="margin-bottom:10px">
+                    <div class="col-md-2">&nbsp;</div>
+                    <div class="col-md-4">
+                    <button type="button" class="btn btn-success btn-sm" ng-click="saveImage()" >Update</button>
+                    </div>
+                </div>
+                <form class="form-horizontal" ng-submit="save(product)" >
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">Name</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" placeholder="Name" ng-model="product.name" required />
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label  class="col-sm-2 control-label">Category</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" placeholder="Category" ng-model="product.type" required />
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">Sub Category</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" placeholder="Sub Category" ng-model="product.subcategory" required />
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">Measure Unit</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" placeholder="Measure Unit" ng-model="product.model">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                      <button type="submit" class="btn btn-warning">Update</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <!-- /.tab-pane -->
+            </div>
+            <!-- /.tab-content -->
+          </div>
+          <!-- /.nav-tabs-custom -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+
+    </section>

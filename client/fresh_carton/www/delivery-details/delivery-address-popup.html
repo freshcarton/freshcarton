@@ -1,0 +1,31 @@
+<ion-modal-view class="">
+    <ion-header-bar class="bar bar-header mainHeader popupPageHeader">
+        <h1 class="title">New Address</h1>
+        <div class="buttons">
+            <button class="clsBtn icon ion-close-round" ng-click="closeLogin()"></button>
+        </div>
+    </ion-header-bar>
+
+
+    <ion-content>
+        <form name="addressFrm" ng-submit="saveAddressNew()">
+              
+            <div class="list">
+                <ion-radio ng-model="savedAddress.addressType" ng-value="'Residential'" class="roundradiobox">Residential</ion-radio>
+                <ion-radio ng-model="savedAddress.addressType" ng-value="'Business'" class="roundradiobox">Business</ion-radio>
+                
+                <div class="nwAddressform">
+                <h3>Address Details</h3>
+                <input type="text" name="street" placeholder="Street" required ng-model="savedAddress.street">
+                <input type="text" name="apt" placeholder="Apt" ng-model="savedAddress.apt">
+                <input type="text" name="city" placeholder="City" ng-model="savedAddress.city" readonly>
+                <input type="text" name="state" placeholder="state" ng-model="savedAddress.state" readonly>
+                <input type="text" name="zipCode" placeholder="ZipCode" ng-model="savedAddress.zip" >
+                <!--<input type="number" name="phoneNo" ng-model="savedAddress.phone" >-->
+                
+                <button class="submitBtn button" type="submit">Done</button>
+                </div>
+            </div>
+        </form>
+    </ion-content>
+</ion-modal-view>

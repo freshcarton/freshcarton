@@ -1,0 +1,35 @@
+<ion-view view-title="{{pageTitle}}">
+    <ion-content>
+        <div ng-if="loading">
+            <div class="loader">
+                <ion-spinner icon="android"></ion-spinner>
+            </div>
+        </div>
+        <div ng-if="!loading" class="col">
+            <div ng-if="dataAvailable" class="col">
+                <div class="odr-dtls" ng-repeat="orderOfInterval in ordersOfTheInterval">
+                    <p class="odrid"><i class="icon"></i>Order Id: {{orderOfInterval.id}}</p>
+                    <p><i class="icon ion-android-time"></i>{{orderOfInterval.scheduleStrTime}}</p>
+                    
+                    <button class="btn-disable" ng-if="orderOfInterval.order_status === 1"> Accepted </button>
+                    <button class="btn-disable" ng-if="orderOfInterval.order_status === 2"> Not Available </button>
+                    <button class="btn-positive" ng-if="orderOfInterval.order_status === 0" ng-click="vendorItems(orderOfInterval)"> Available </button>
+                    <div class="box-grp {{orderOfInterval.order_class}}">
+                        <div class="box" ng-repeat="orderVendor in orderOfInterval.OrderVendors">
+                            <address>
+                                <i class="icon ion-ios-location-outline"></i>
+                                {{orderVendor.VendorContactAddressBook.formattedaddress}}
+                            </address>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div ng-if="!dataAvailable" class="col">
+                <h2>Nothing Available</h2>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>
+
+
+

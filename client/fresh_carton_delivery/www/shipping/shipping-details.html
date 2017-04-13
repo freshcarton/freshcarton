@@ -1,0 +1,81 @@
+<ion-view view-title="Customer Details">
+    <ion-content class="has-footer">
+        <div ng-if="loading">
+            <div class="loader">
+                <ion-spinner icon="android"></ion-spinner>
+            </div>
+        </div>
+        <div ng-if="!loading">
+            <div class="row">
+                <div class="col">
+                    <div class="pick-order customers">
+                        <div class="row">
+                            <div class="col col-25">Order Id:</div>
+                            <div class="col col-75">{{order.id}}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col col-25">Name :</div>
+                            <div class="col col-75">{{order.Customer.name}}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col col-25">Address :</div>
+                            <div class="col col-75">{{order.CustomerContactAddressBook.formattedaddress}}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col col-25">City :</div>
+                            <div class="col col-75">{{order.CustomerContactAddressBook.city}}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col col-25">Phone :</div>
+                            <div class="col col-75">{{order.CustomerContactAddressBook.phone}}</div>
+                        </div>
+                    </div>
+                    <ul class="list shp-lst" ng-repeat="vendor in order.OrderVendors">
+                        <div class="row">
+                            <div class="col col-25">Shop :</div>
+                            <div class="col col-75">{{vendor.Vendor.name}}</div>
+                        </div>
+                        <li class="item itm-lst" ng-repeat="itemToPickUp in vendor.OrderVendorItems">{{itemToPickUp.productName}}<span class="item-note">{{itemToPickUp.quantity}} {{itemToPickUp.measureunit}}</span></li>
+                    </ul>
+                </div>
+            </div>     
+            <span class="error" id="vendorSignError"></span>
+            <div ng-if="take_signature" class="sign-area">
+                <div class="row">
+                    <div class="col">
+                        <h3 class="col-54">Customer's Signature</h3>
+                    </div>
+                    <div class="col">
+                        <div ng-if="!addVendorSign" style="text-align: right;">
+                            <button class="icon ion-edit" ng-click="addVendorSignature()"> edit</button>
+                        </div>
+                        <div ng-if="addVendorSign" style="text-align: right;">
+                            <button class="icon ion-ios-plus-outline" ng-click="addVendorSignature()"> Add Signature</button>
+                        </div>
+                    </div> 
+                </div>
+                <img ng-src="{{vendorSign}}">
+            </div>
+            <span class="error" id="employeeSignError"></span>
+            <div ng-if="take_signature" class="sign-area">
+                <div class="row">
+                    <div class="col">
+                        <h3 class="col-54">Employee's Signature</h3>
+                    </div>
+                    <div class="col">
+                        <div ng-if="!addEmployeeSign" style="text-align: right;">
+                            <button class="icon ion-edit" ng-click="addEmpSignature()"> edit</button>
+                        </div>
+                        <div ng-if="addEmployeeSign" style="text-align: right;">
+                            <button class="icon ion-ios-plus-outline" ng-click="addEmpSignature()"> Add Signature</button>
+                        </div>
+                    </div> 
+                </div>
+                <img ng-src="{{employeeSign}}">
+            </div> 
+        </div>        
+    </ion-content>
+    <div ng-if="take_signature" class="bar bar-footer footer-btn">
+        <button class="button button-positive" ng-click="pickedUp()">Done</button>
+    </div>
+</ion-view>

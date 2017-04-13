@@ -1,0 +1,19 @@
+<ion-modal-view>
+    <ion-header-bar class="bar-dark">
+        <h1 class="title">{{modalHeading}}</h1>
+        <button class="button button-clear icon ion-close-round cls" ng-click="closeLogin()"></button>
+    </ion-header-bar>
+    <ion-content class="has-footer">
+        <div class="row">
+            <div class="col">
+                <canvas id="signature"></canvas>
+            </div>
+        </div>
+    </ion-content>
+    <div class="bar bar-footer footer-btn">
+        <div class="button-bar">
+            <a class="button button-assertive" ng-click="clearCanvas()">Clear</a>
+            <a class="button button-positive" ng-click="saveCanvas()">Save</a>
+        </div>
+    </div>
+</ion-modal-view>

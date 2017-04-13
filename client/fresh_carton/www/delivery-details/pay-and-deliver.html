@@ -1,0 +1,44 @@
+<ion-view view-title="Check Out">
+    <ion-content class="Delivery">
+        <div class="sbHeader">Check Out</div>
+        <div class="loader" ng-show="loading">
+            <ion-spinner icon="android"></ion-spinner>
+        </div>
+        <div ng-hide="loading">
+            <div ng-hide="orderConfirm" class="row responsive-sm">
+                <div class="col tel">
+                    <h3>Delivery Instruction</h3>
+                    <select class="gradient">
+                        <option>Text / Call me</option>
+                    </select>
+                    <input type="text" ng-model="savedAddress.phone" placeholder="Phone No.">
+                </div>
+            </div>
+            <div ng-hide="orderConfirm" class="row responsive-sm">
+                <div class="col">
+                    <h3>Payment</h3>
+                    <form id="checkout" method="post" action="/checkout">
+                        <div id="payment-form"></div>
+                        <button style="padding: 10px;" class="button papalsubmit"  type="submit">Check Out (${{payAbleAmount}})</button>
+                    </form>
+                </div>
+            </div>
+            <div class="order-confirmation" ng-show="orderConfirm" >
+                <div class="odrCnfrm" ng-show="orderSuccess">
+                	<i class="icon ion-checkmark-circled"></i>
+                    <span class="cnfrm">order confirm</span>
+                    
+                    <span class="ono">order No:</span>
+                    <span class="OId">{{confirmToken}}</span>
+                    <a  href="#/app/dashboard">Go to dashboard</a>
+                </div>
+                <div class="odrError" ng-hide="orderSuccess">
+                	<i class="icon ion-checkmark-circled"></i>
+                     <span>{{errorMessage}}</span>
+                </div>
+            </div>
+        </div>
+
+
+    </ion-content>
+</ion-view>

@@ -1,0 +1,30 @@
+<ion-view view-title="Order # {{pickOrderId}}">
+    <ion-content>
+        <div ng-if="loading">
+             <div class="loader">
+                 <ion-spinner icon="android"></ion-spinner>
+            </div>
+        </div>
+        <div class="row" ng-if="!loading">
+            <div class="col">
+                <p>{{order.scheduleDate}}</p>
+              
+                <div class="pick-order" ng-repeat="orderVendor in order.OrderVendors"> 
+                    <div class="row">
+                        <div class="col col-25">Shop :</div>
+                        <div class="col col-75">{{orderVendor.Vendor.name}}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col col-25">Address :</div>
+                        <div class="col col-75">{{orderVendor.VendorContactAddressBook.formattedaddress}}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col col-25">Status :</div>
+                        <div class="col col-75">{{orderVendor.status}}</div>
+                    </div>
+                    <a class="button icon ion-arrow-right-b icon-right" href="#/app/pickUpDetails/{{order.id}}/vendor/{{orderVendor.VendorId}}"> Next </a>
+                </div>
+            </div>
+        </div>     
+    </ion-content>
+</ion-view>

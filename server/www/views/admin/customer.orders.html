@@ -1,0 +1,27 @@
+<div class="input-group input-group-sm" style="width: 150px;">
+  <input type="text" name="table_search" class="form-control pull-right" placeholder="Search" ng-model="by_order">
+  <div class="input-group-btn">
+    <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+  </div>
+</div>
+
+<div class="table-responsive">
+  <table class="table no-margin table-striped">
+    <thead>
+    <tr>
+    	<th>Order Number</th>
+      <th>Status</th>
+      <th>Schedule At</th>
+      <th>deliveryAt</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="order in orders | filter:by_order">
+      <td><a ui-sref="app.user.order({usertype: user.usertype,userid:user.id,orderid:order.id})">{{order.name}}</a></td>
+      <td><span ng-class="{new:'label label-info','pick up complete':'label label-warning',delivered:'label label-success'}[order.status]">{{order.status}}</span></td>
+      <td><span>{{order.scheduleAt}}</span></td>
+      <td><span>{{order.deliveryDate}}</span></td>
+    </tr>
+    </tbody>
+  </table>
+</div>

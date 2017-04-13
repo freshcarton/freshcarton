@@ -1,0 +1,130 @@
+    <section class="content-header">
+      <h1> Vendors </h1>
+    </section>
+
+    <section class="content">
+    	<div class="row">
+      	<div class="col-md-7">
+		<div class="box box-info">
+	            <div class="box-header with-border">
+	              <h3 class="box-title">Vendors</h3>
+	            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <div class="table-responsive">
+                <table class="table no-margin table-striped">
+                  <thead>
+                  <tr>
+                  	<th>Vendor</th>
+                    <th>Address</th>
+                    <th>Phone Number</th>
+                    <th>&nbsp;</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr ng-repeat="vendor in vendors">
+                    <td><a ui-sref="app.user.vendor({usertype: user.usertype,userid:user.id,vendorid:vendor.id})">{{vendor.name}}</a></td>
+                    <td>{{vendor.address}}</td>
+                    <td>{{vendor.phone}}</td>
+                    <td>&nbsp;</td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!-- /.table-responsive -->
+            </div>
+
+      	</div>
+	</div>
+      		<div class="col-md-4">
+          <button class="btn btn-primary btn-block" ng-click="addNewVendorFrom()" ng-show="showNewVendorForm==false">Add Product</button>
+
+          <div class="box box-primary" ng-show="showNewVendorForm==true">
+            <div class="box-header with-border">
+              <h3 class="box-title">New Vendor</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+				<form class="form-horizontal" ng-submit="create(newvendor)" >
+					   <div class="form-group">
+					     <label class="col-sm-2 control-label" >Name</label>
+
+					     <div class="col-sm-10">
+					       <input type="text" class="form-control" ng-model="newvendor.name" required/>
+					     </div>
+					   </div>
+
+					   <div class="form-group">
+					     <label  class="col-sm-2 control-label">Contact Name</label>
+
+					     <div class="col-sm-10">
+					       <input type="text" class="form-control" ng-model="newvendor.contactname" required/>
+					     </div>
+					   </div>
+
+					   <div class="form-group">
+					     <label  class="col-sm-2 control-label">Street</label>
+
+					     <div class="col-sm-10">
+					       <input type="text" class="form-control" ng-model="newvendor.addressline1" required/>
+					     </div>
+					   </div>
+
+					   <div class="form-group">
+					     <label  class="col-sm-2 control-label">Apt, Suite, etc</label>
+
+					     <div class="col-sm-10">
+					       <input type="text" class="form-control" ng-model="newvendor.addressline2" />
+					     </div>
+					   </div>
+
+					   <div class="form-group">
+					     <label  class="col-sm-2 control-label">City</label>
+
+					     <div class="col-sm-10">
+					       <input type="text" class="form-control" ng-model="newvendor.city" required/>
+					     </div>
+					   </div>
+					   <div class="form-group">
+					     <label  class="col-sm-2 control-label">State</label>
+
+					     <div class="col-sm-10">
+					       <input type="text" class="form-control" ng-model="newvendor.state" required/>
+					     </div>
+					   </div>
+					   <div class="form-group">
+					     <label  class="col-sm-2 control-label">Zipcode</label>
+
+					     <div class="col-sm-10">
+					       <input type="text" class="form-control" ng-model="newvendor.zipcode" required/>
+					     </div>
+					   </div>
+
+					   <div class="form-group">
+					     <label  class="col-sm-2 control-label">Email</label>
+
+					     <div class="col-sm-10">
+					       <input type="email" class="form-control" ng-model="newvendor.email" required/>
+					     </div>
+					   </div>
+					   <div class="form-group">
+					     <label  class="col-sm-2 control-label">Phone Number</label>
+
+					     <div class="col-sm-10">
+					       <input type="text" class="form-control" ng-model="newvendor.phone" required/>
+					     </div>
+					   </div>
+
+					   <div class="form-group">
+					   		<div class="col-sm-5"><button type="submit" class="btn btn-success btn-block">Save</button></div>
+					     	<div class="col-sm-5"><button type="button" class="btn btn-warning btn-block" ng-click="cancelNewVendor()">Cancel</button></div>
+					   </div>
+				</form>
+            </div>
+
+            <!-- /.box-body -->
+          </div>
+
+      		</div>
+      </div>
+    </section>

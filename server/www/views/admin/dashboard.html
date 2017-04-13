@@ -1,0 +1,190 @@
+    <section class="content-header">
+      <h1> Dashboard <small>{{now.date}}</small></h1>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="row">
+        <div class="col-md-3 col-sm-3 col-xs-6">
+          <div class="small-box bg-aqua" ng-click="by_order_status=0">
+            <div class="inner">
+              <h3>{{new_orders+delivered_orders+inprogress_orders}}</h3>
+              <p>&nbsp;</p>
+            </div>
+            <div class="icon">
+              <i class="fa fa-calendar"></i>
+            </div>
+              <a class="small-box-footer btn" ng-click="by_order_status=0"><b>Received Orders</b></a>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-3 col-xs-6">
+          <div class="small-box bg-primary" ng-click="by_order_status=1">
+            <div class="inner">
+              <h3>{{new_orders}}</h3>
+              <p>&nbsp;</p>
+            </div>
+            <div class="icon">
+              <i class="fa fa-calendar-check-o"></i>
+            </div>
+            <a class="small-box-footer btn" ng-click="by_order_status=1"><b>New</b></a>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-3 col-xs-6">
+          <div class="small-box bg-yellow" ng-click="by_order_status=2">
+            <div class="inner">
+              <h3>{{inprogress_orders}}</h3>
+              <p>&nbsp;</p>
+            </div>
+            <div class="icon">
+              <i class="fa fa-car"></i>
+            </div>
+            <a class="small-box-footer btn" ng-click="by_order_status=2"><b>In Transit</b></a>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-3 col-xs-6">
+          <div class="small-box bg-green" ng-click="by_order_status=3">
+            <div class="inner">
+              <h3>{{delivered_orders}}</h3>
+              <p>&nbsp;</p>
+            </div>
+            <div class="icon">
+              <i class="fa fa-thumbs-up"></i>
+            </div>
+            <a class="small-box-footer btn" ng-click="by_order_status=3"><b>Delivered</b></a>
+          </div>
+        </div>
+      </div>
+
+	  <div class="row">
+		  <div class="col-lg-7 col-md-7 col-sm-12 col-xs-12">
+		  <div class="box box-info">
+			  <div class="box-header">
+				  <h3 class="box-title">Orders +/- 1 day {{screen.width}}</h3>
+				  <div class="box-tools pull-right">
+						<input type="text" name="table_search" class="form-control" placeholder="Search" ng-model="by_order">
+				  </div>
+			  </div>
+        <div class="box-body">
+          <div class="table-responsive">
+            <table class="table no-margin no-padding table-striped ">
+              <thead>
+              <tr>
+                <th>Order Number</th>
+                <th>Vendor Accepted</th>
+                <th class="hidden-xs">Status</th>
+                <th>Schedule At</th>
+                <th class="hidden-xs">deliveryAt</th>
+                <th class="visible-lg">Employee Name</th>
+                <th>&nbsp;</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr ng-repeat="order in orders | filter:by_order" ng-show="by_order_status==order.by_order_status || by_order_status==0" ng-click="show_order(order)" ng-class="{new:'','pick up complete':'warning',delivered:'success'}[order.status]">
+                <td>{{order.name}}</td>
+                <td>{{order.accepted_vendors}} / {{order.OrderVendors.length}}
+                <td class="hidden-xs"><span ng-class="{new:'label label-info','pick up complete':'label label-warning',delivered:'label label-success'}[order.status]">{{order.status}}</span></td>
+                <td>{{order.scheduleAt.date}}</td>
+                <td class="hidden-xs">{{order.scheduleAt.date}}</td>
+                <td class="visible-lg">{{order.Employee.name}}</td>
+                <td ><i class="fa fa-refresh fa-spin" ng-show="order.loading==1"></i></td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+		  </div>
+		  </div>
+      <div class="col-lg-5 col-md-5 hidden-xs hidden-sm" ng-if="screen.width>768" ng-show="order_view>=1">
+        <div class="box box-warning">
+  			  <div class="box-header">
+  				  <h3 class="box-title">Order: <strong>{{selectedOrder.name}}</strong></h3>
+  			  </div>
+          <div class="box-body">
+            <div ng-show="order_view==2">
+              <strong><p class="text-muted">Employee Name:</p> {{order.Employee.name}}</strong>
+              <address>
+                <strong><p class="text-muted">Customer:</p>{{selectedOrder.Customer.name}}</strong><br>
+                {{selectedOrder.CustomerContactAddressBook.formattedaddress}}<br>
+                Phone: {{selectedOrder.CustomerContactAddressBook.phone}}<br>
+              </address>
+
+              <div ng-repeat="ordervendor in selectedOrder.OrderVendors">
+                <h3>
+                  <span ng-class="{new:'label label-info','ready':'label label-warning',picked:'label label-success'}[ordervendor.status]">{{ordervendor.status}}</span>
+                  {{ordervendor.Vendor.name}}
+                <small>{{ordervendor.VendorContactAddressBook.formattedaddress}}</small></h3>
+                <table class="table no-margin">
+                  <thead>
+                  <tr>
+                    <th>Product</th>
+                    <th>Qty</th>
+                    <th>Unit Price</th>
+                    <th>Discount</th>
+                    <th>Subtotal</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr ng-repeat="item in ordervendor.OrderVendorItems">
+                    <td>{{item.productName}}</td>
+                    <td>{{item.quantity}} {{item.measureunit}}</td>
+                    <td>{{item.unitprice}}</td>
+                    <td>{{item.discountamount}}</td>
+                    <td>{{(item.unitprice * item.quantity) - item.discountamount}}</td>
+                  </tr>
+                  </tbody>
+                </table>
+                <hr>
+              </div>
+            </div>
+            <div class="overlay" ng-show="order_view==1">
+              <i class="fa fa-refresh fa-spin"></i>
+            </div>
+          </div>
+  		  </div>
+
+      </div>
+		</div>
+    </section>
+    <script type="text/ng-template" id="modal.order.html">
+        <div class="modal-header">
+            <h3 class="modal-title" id="modal-title">{{$ctrl.selectedOrder.name}}</h3>
+        </div>
+        <div class="modal-body" id="modal-body">
+                <strong><p class="text-muted">Employee Name:</p> {{$ctrl.selectedOrder.Employee.name}}</strong>
+                <address>
+                  <strong><p class="text-muted">Customer:</p>{{$ctrl.selectedOrder.Customer.name}}</strong><br>
+                  {{$ctrl.selectedOrder.CustomerContactAddressBook.formattedaddress}}<br>
+                  Phone: {{$ctrl.selectedOrder.CustomerContactAddressBook.phone}}<br>
+                </address>
+                <div ng-repeat="ordervendor in $ctrl.selectedOrder.OrderVendors">
+                  <h3>
+                    <span ng-class="{new:'label label-info','ready':'label label-warning',picked:'label label-success'}[ordervendor.status]">{{ordervendor.status}}</span>
+                    {{ordervendor.Vendor.name}}
+                  <small>{{rdervendor.VendorContactAddressBook.formattedaddress}}</small></h3>
+                  <table class="table no-margin">
+                    <thead>
+                    <tr>
+                      <th>Product</th>
+                      <th>Qty</th>
+                      <th>Unit Price</th>
+                      <th>Discount</th>
+                      <th>Subtotal</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="item in ordervendor.OrderVendorItems">
+                      <td>{{item.productName}}</td>
+                      <td>{{item.quantity}} {{item.measureunit}}</td>
+                      <td>{{item.unitprice}}</td>
+                      <td>{{item.discountamount}}</td>
+                      <td>{{(item.unitprice * item.quantity) - item.discountamount}}</td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="button" ng-click="$ctrl.ok()">OK</button>
+            <button class="btn btn-warning" type="button" ng-click="$ctrl.cancel()">Cancel</button>
+        </div>
+    </script>

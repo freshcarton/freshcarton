@@ -1,0 +1,32 @@
+<ion-view view-title="Pick-up Orders">
+    <ion-content>
+        <div ng-if="loading">
+             <div class="loader">
+                 <ion-spinner icon="android"></ion-spinner>
+            </div>
+        </div>
+        <div class="row" ng-if="!loading">
+            <div ng-if="dataAvailable" class="col">
+                <div class="pick-order" ng-repeat="acceptOrder in acceptedOrders">       
+                    <div class="row">
+                        <div class="col col-25">Order Id :</div>
+                        <div class="col col-75">{{acceptOrder.id}}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col col-25">Date:</div>
+                        <div class="col col-75">{{acceptOrder.scheduleDate}}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col col-25">Status :</div>
+                        <div class="col col-75">{{acceptOrder.status}}</div>
+                    </div>
+                    <a class="button icon ion-arrow-right-b icon-right" href="#/app/orderPickDetails/{{acceptOrder.id}}">Details</a>
+                </div>
+            </div>
+            <div ng-if="!dataAvailable" class="col">
+                <h4 style="text-align: center;">Nothing Available</h4>
+            </div>
+        </div>     
+    </ion-content>
+    <a class="button button-icon icon ion-calendar btn-fix" ng-click="openCalender()"></a>
+</ion-view>

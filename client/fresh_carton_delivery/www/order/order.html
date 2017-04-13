@@ -1,0 +1,28 @@
+<ion-view view-title="Available Delivery dates">
+    <ion-content>
+        <div ng-if="loading">
+            <div class="loader">
+                <ion-spinner icon="android"></ion-spinner>
+            </div>
+        </div>
+        <div ng-if="!loading">
+            <div ng-if="dataAvailable" class="col">
+                <ion-list class="col">
+                    <div class="box orders" ng-repeat="dateInterval in dateIntervals" ng-click="interValOrders(dateInterval)">
+                        <p><i class="icon ion-calendar"></i>{{dateInterval.dateIntervalName}}</p>
+                        <p><i class="icon ion-android-time"></i>{{dateInterval.dareIntervalTime}}</p>
+                    </div>
+                </ion-list>
+            </div>
+            <div ng-if="!dataAvailable" class="col">
+                <h4 style="text-align: center;">Nothing Available</h4>
+            </div>
+        </div>
+    </ion-content>
+    <a class="button button-icon icon ion-calendar btn-fix" ng-click="openCalender()"></a>
+</ion-view>
+
+
+
+
+

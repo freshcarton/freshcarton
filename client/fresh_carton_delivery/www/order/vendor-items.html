@@ -1,0 +1,23 @@
+<ion-modal-view>
+    <ion-header-bar class="bar-dark">
+        <h1 class="title">{{modalHeading}}</h1>
+        <button class="button button-clear icon ion-close-round cls" ng-click="closeItemList()"></button>
+    </ion-header-bar>
+    <ion-content class="has-footer col">
+        <p class="odrid"><i class="icon"></i>Order Id: {{orderId}}</p>
+        <div class="col ordr-pop">
+            <div class="list" ng-repeat="vendor in orderVendors.order_vendors">
+                <div class="adr-wrp">
+                    <i class="icon ion-ios-location-outline"></i>
+                    <address>
+                        {{vendor.Vendor.name}} ({{vendor.VendorContactAddressBook.formattedaddress}})
+                    </address>
+                </div>
+                <div class="item itm-lst" ng-repeat="itemToPickUp in vendor.OrderVendorItems">{{itemToPickUp.productName}}<span class="item-note">{{itemToPickUp.quantity}} {{itemToPickUp.measureunit}}</span></div>
+            </div>
+        </div>
+    </ion-content>
+    <div class="bar bar-footer footer-btn">
+        <button class="button button-positive" ng-click="acceptToPickUp(orderVendors.id)">Accept to Pick-up</button>
+    </div>
+</ion-modal-view>

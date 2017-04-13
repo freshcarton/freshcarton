@@ -1,0 +1,40 @@
+    <section class="content-header">
+      <h1> Vendors </h1>
+    </section>
+
+    <section class="content">
+    	<div class="row">
+      	<div class="col-md-7">
+		<div class="box box-info">
+	            <div class="box-header with-border">
+	              <h3 class="box-title">Vendors</h3>
+	            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <div class="table-responsive">
+                <table class="table no-margin table-striped">
+                  <thead>
+                  <tr>
+                  	<th>Vendor</th>
+                    <th>Address</th>
+                    <th>Phone Number</th>
+                    <th>&nbsp;</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr ng-repeat="vendor in vendors">
+                    <td>{{vendor.name}}</td>
+                    <td>{{vendor.address}}</td>
+                    <td>{{vendor.phone}}</td>
+                    <td>&nbsp;</td>
+                  </tr>                  
+                  </tbody>
+                </table>
+              </div>
+              <!-- /.table-responsive -->
+            </div>
+      	
+      	</div>
+	</div>
+      </div>
+    </section>

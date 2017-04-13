@@ -1,0 +1,41 @@
+<div class="lockscreen-wrapper">
+  <div class="lockscreen-logo">
+    <span class="glyphicon glyphicon-shopping-cart"></span><p>FreshCarton</p>
+  </div>
+  <!-- User name -->
+  <div class="lockscreen-name">{{entity.username}}</div>
+
+  <!-- START LOCK SCREEN ITEM -->
+  <div class="lockscreen-item">
+    <!-- lockscreen image -->
+    <div class="lockscreen-image">
+	  <!-- Shopping Cart icon by Icons8 -->
+	  <img class="icon icons8-Shopping-Cart" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAACoklEQVRoQ+2Yv2/TQBTHv69S605tOsIARQKJAalh6hqmbjQ7lWhG2wPNQuMJmJKypAzpivsX0DJmCmsWimDoGPoXNKM79KGzseQ4sePz70jxmPjdvc99v+/unQkL/tCC548lQNEKLhUolwLqQR3gD1hdq+LhA2Bjw81vBCIT6vGnohP2zz9pIfXNCKDH9kvr68Czp5PvM0zorUaZIOQARObEr6Aag7JA+AAO6mB8xNrqjs9Cnnz5HJpxWE6AWVn1PldB9z/LkjCIn0A1Rm4+0bbRXlsUsVMbhT78A5pR86YQEaBzCsK7QnMPqL+IAKWw0S9orWr4Nhq2xEXbiLkB3TATABRoI+a/0I3tWesbzUIi8uxEnNLfiqkDakI7Pk0GYEN0bgFs5gwxhqVso9kUc0890RWwAdomQG9zBWB8gd46CppTEqAAG/kOrvhF7EaedTg/Bea3LXIKODZi5HUT5ZWX0N9fhS1YDIATBvIQYbptSF7Ezk6UR/aR2/YYCggAwSAfGrl2Qg6ulIpYJJ+hEAFtw2JYSGL17QY1sqxT22gmKoxBXJe5siYA+E+kteTHkF614AD5yf270MIDWMpWUKOV4kIHDhVHAXEy7nhGHIC44b1o55G4O4c8QK99CKKvmSYpYUt5AOc09quQLk/mAN1uBYolvs55rZQeROYAbqqOncRlI12Q3AAAVGv1iqJwlxl1IlQAmJZFzavBxcwroFemJLHxi9hnlN291xcA7Xt/ZubzYf/73O+nSWJTBNi3u7pHz1/YncnN9W8w43bYv9yaVxS7e/FjMwIAbq7/CIDxsH8p7BT6TALIxaYIsOAWcgrx3mSmGhE2hf/v7laOohdxvNjUFJhnk6z/j3cSZ52VxPhLAInFyuTVpQKZLKvEoP8Ao/QVQMQxmkIAAAAASUVORK5CYII=" alt="User Image">    
+    </div>
+    <!-- /.lockscreen-image -->
+
+    <!-- lockscreen credentials (contains the form) -->
+    <form class="lockscreen-credentials" name="loginform" ng-submit="login()">
+      <div class="input-group">
+        <input type="password" class="form-control" placeholder="password" ng-model="entity.password" required>
+
+        <div class="input-group-btn">
+          <button type="button" class="btn"><i class="fa fa-arrow-right text-muted"></i></button>
+        </div>
+      </div>
+    </form>
+    <!-- /.lockscreen credentials -->
+
+  </div>
+  <!-- /.lockscreen-item -->
+  <div class="help-block text-center">
+    Enter your password to retrieve your session
+  </div>
+  <div class="text-center">
+    <a href="login.html">Or sign in as a different user</a>
+  </div>
+  <div class="lockscreen-footer text-center">
+    Copyright &copy; 2014-2016 <b><a href="http://localhost:8080/" class="text-black">Freshcarton</a></b><br> All rights reserved
+  </div>
+</div>
+<!-- /.center -->

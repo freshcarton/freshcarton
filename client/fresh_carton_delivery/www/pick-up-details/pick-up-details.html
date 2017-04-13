@@ -1,0 +1,71 @@
+<ion-view view-title="Order # {{orderId}}">
+    <ion-content class="has-footer destination">
+        <div ng-if="loading">
+            <div class="loader">
+                <ion-spinner icon="android"></ion-spinner>
+            </div>
+        </div>
+        <div ng-if="!loading">
+            <div class="secondery-header">
+                <h2>{{orderDetails.Vendor.name}}</h2>
+                <address>
+                    {{orderDetails.VendorContactAddressBook.formattedaddress}}
+                    Phone: {{orderDetails.VendorContactAddressBook.phone}}
+                </address>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <ion-list>
+                        <ion-item ng-repeat="orderVendor in orderDetails.OrderVendorItems" class="itm-lst">
+                            {{orderVendor.productName}} <span class="item-note">{{orderVendor.quantity}}{{orderVendor.measureunit}}</span>
+                        </ion-item>
+                    </ion-list>
+                </div>
+            </div>
+            <span class="error" id="vendorSignError"></span>
+            <div ng-if="take_signature" class="sign-area">
+                <div class="row">
+                    <div class="col">
+                        <h3>Vendor's Signature</h3>
+                    </div>
+                    <div class="col">
+                        <div ng-if="!addVendorSign" style="text-align: right;">
+                            <button class="icon ion-edit" ng-click="addVendorSignature()"> edit</button>
+                        </div>
+                        <div ng-if="addVendorSign" style="text-align: right;">
+                            <button class="icon ion-ios-plus-outline" ng-click="addVendorSignature()"> Add Signature</button>
+                        </div>
+                    </div> 
+                </div>
+                <div class="sgn-cvr">
+                    <img ng-src="{{vendorSign}}">
+                </div>
+            </div>
+            <span class="error" id="employeeSignError"></span>
+            <div ng-if="take_signature" class="sign-area">
+                <div class="row">
+
+                    <div class="col">
+                        <h3 class="col-54">Employee's Signature</h3>
+                    </div> 
+                    <div class="col">
+                        <div ng-if="!addEmployeeSign" style="text-align: right;">
+                            <button class="icon ion-edit" ng-click="addEmpSignature()"> edit</button>
+                        </div>
+                        <div ng-if="addEmployeeSign" style="text-align: right;">
+                            <button class="icon ion-ios-plus-outline" ng-click="addEmpSignature()"> Add Signature</button>
+                        </div>
+                    </div> 
+                </div>
+                <div class="sgn-cvr">
+                    <img ng-src="{{employeeSign}}">
+                </div>
+            </div>
+        </div>
+    </ion-content>
+    <div ng-if="take_signature" class="bar bar-footer footer-btn">
+        <button class="button button-positive" ng-click="pickedUp()">Done</button>
+    </div>
+</ion-view>
+
+

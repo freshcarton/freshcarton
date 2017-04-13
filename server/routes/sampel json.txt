@@ -1,0 +1,70 @@
+{
+   "customer":{
+    "id":74,
+    "deliveryAddress":"655 S Fair Oaks Ave, Sunnyvale, CA 94086, USA",
+    "scheduledate":"2016-07-01",	
+    "scheduletime":"13:30:00",
+    "items":[{
+			"id":2,
+			"name":"Safeway",
+			"vendorcontactid":2,
+			"vendorcontactaddressbookid":2,
+			"Products":[{
+			"id":4,
+			"name":"organic milk",
+			"category":"dairy",
+			"subcategory": "organic",
+			"type":"dairy",
+			"model":"oz",
+			"cartquantity":2,
+			"Inventories": [
+				{
+				  "serialnumber": "6512",
+				  "unitprice": "4.59",
+				  "id": 4
+				}
+			  ]
+			}]	
+			},
+			{
+			"id":1,
+			"name":"walmart",
+			"vendorcontactid":1,
+			"vendorcontactaddressbookid":1,
+			"Products":[
+				{
+				  "id": 3,
+				  "name": "organic white onions",
+				  "category": "food",
+				  "subcategory": "organic",
+				  "type": "vegetables",
+				  "model": "lb",
+				  "cartquantity":2,
+				  "Inventories": [
+					{
+					  "serialnumber": "5091",
+					  "unitprice": "1.99",
+					  "id": 1
+					}
+				  ]		
+				},
+				{
+				  "id": 2,
+				  "name": "organic roma tomatoes",
+				  "category": "food",
+				  "subcategory": "organic",
+				  "type": "vegetables",
+				  "model": "lb",
+				  "cartquantity":3,
+				  "Inventories": [
+					{
+					  "serialnumber": "1256",
+					  "unitprice": "0.99",
+					  "id": 2
+					}
+				  ]
+				}
+			]	
+		}]
+	}
+}	

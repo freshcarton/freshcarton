@@ -1,0 +1,18 @@
+<ion-content class="Daddress Tps">
+    <ion-header-bar class="bar bar-header mainHeader popupPageHeader">
+        <h1 class="title">Select Tips</h1>
+        <div class="buttons">
+            <button class="clsBtn icon ion-close-round" ng-click="closeLogin()"></button>
+        </div>
+    </ion-header-bar>
+    <ion-list class="roundradioboxlist">
+        <ion-radio style="margin-top: 60px;" ng-value="tipsData.tenPercent" ng-model="data.selectedTip"> 10% (${{tipsData.tenPercent}}) </ion-radio>
+        <ion-radio ng-value="tipsData.fifteenPercent" ng-model="data.selectedTip"> 15% (${{tipsData.fifteenPercent}}) </ion-radio>
+        <ion-radio ng-value="tipsData.twentyPercent" ng-model="data.selectedTip">20% (${{tipsData.twentyPercent}})</ion-radio>
+        <ion-radio ng-value="tipsData.others" ng-model="data.selectedTip"> Others 
+            <input class="radioInput" ng-model="data.customTip" type="text" placeholder="5"> 
+        </ion-radio>
+        <ion-radio ng-value="tipsData.later" ng-model="data.selectedTip"> Later </ion-radio>
+    </ion-list>
+</ion-content>
+<button class="nextButton positive gradient" ng-click="tipsAdding(data)">Submit</button>

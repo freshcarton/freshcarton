@@ -1,0 +1,39 @@
+<div class="row">
+	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+<div class="box box-info" >
+  <div class="box-header with-border">
+    <h3 class="box-title"> Customers</h3>
+    <div class="box-tools">
+			<div class="input-group input-group-sm" style="width: 150px;">
+				<input type="text" name="table_search" class="form-control pull-right" placeholder="Search" ng-model="by_customer">
+				<div class="input-group-btn">
+					<button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+				</div>
+			</div>
+
+    </div>
+  </div>
+  <div class="box-body">
+			<div class="table-responsive">
+					<table class="table no-margin no-padding table-striped">
+						<thead>
+							<tr>
+								<th>Customer</th>
+								<th>Address</th>
+								<th>Phone Number</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="customer in customers | filter:by_customer">
+								<td><a ui-sref="app.user.customer({usertype: user.usertype,userid:user.id,customerid:customer.id})">{{customer.name}}</a></td>
+								<td>{{customer.address}}</td>
+								<td>{{customer.phone}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+    </div>
+</div>
+</div>
+</div>

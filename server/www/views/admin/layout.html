@@ -1,0 +1,77 @@
+<div ui-view="layout" class="wrapper" ng-controller="UserController">
+      <header class="main-header">
+          <nav class="navbar navbar-static-top">
+                <div class="navbar-header">
+                  <a href="#" class="navbar-brand"><i class="fa fa-shopping-cart"></i>&nbsp;<b>FreshCarton</b></a>
+                  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
+                    <i class="fa fa-bars"></i>
+                  </button>
+                </div>
+                <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
+                    <ul class="nav navbar-nav">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i>&nbsp;{{user.name}} <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+
+                          <li><a href="#" ng-click="logout()"><i class="fa fa-sign-out"></i>Logout</a></li>
+                        </ul>
+                    </li>
+                    <li ng-class="{true:'active',false:''}[page=='dashboard']"><a ui-sref="app.user.dashboard({usertype: user.type,userid:user.id})"><i class="fa fa-bar-chart"></i> <span>Dashboard</span></a></li>
+                    <li ng-class="{true:'active',false:''}[page=='orders']"><a ui-sref="app.user.orders({usertype: user.type,userid:user.id})"><i class="fa fa-shopping-cart"></i> <span>Orders</span></a></li>
+                    <li ng-class="{true:'active',false:''}[page=='vendors']"><a ui-sref="app.user.vendors({usertype: user.type,userid:user.id})"><i class="fa fa-male"></i> <span>Vendors</span></a></li>
+                    <li ng-class="{true:'active',false:''}[page=='employees']"><a ui-sref="app.user.employees({usertype: user.type,userid:user.id})"><i class="fa fa-smile-o"></i> <span>Employees</span></a></li>
+                    <li ng-class="{true:'active',false:''}[page=='customers']"><a ui-sref="app.user.customers({usertype: user.type,userid:user.id})"><i class="fa fa-users"></i> <span>Customers</span></a></li>
+
+        <!--
+        <li ng-class="{true:'active',false:''}[page=='customers']"><a ui-sref="app.user.customers({usertype: user.type,userid:user.id})"><i class="fa fa-users"></i> <span>Customers</span></a></li>
+        <li ng-class="{true:'active',false:''}[page=='products']"><a ui-sref="app.user.products({usertype: user.type,userid:user.id})"><i class="fa fa-link"></i> <span>Products</span></a></li>
+
+                      <li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li>
+                      <li><a href="#">Link</a></li>
+                      <li><a href="#">Link</a></li>
+                      <li><a href="#">Link</a></li>
+                      <li><a href="#">Link</a></li>
+		-->
+
+                    </ul>
+<!--
+                    <form class="navbar-form navbar-left" role="search">
+                        <div class="input-group">
+                          <input type="text" class="form-control" id="navbar-search-input" placeholder="Search">
+                            <div class="input-group-btn">
+                              <button type="button" class="btn btn-info">Search</button>
+                            </div>
+                        </div>
+                    </form>
+-->
+                </div>
+          </nav>
+      </header>
+
+  <div class="content-wrapper">
+  	<div ui-view="body"></div>
+  </div>
+  <!-- Main Footer -->
+  <footer class="main-footer">
+    <!-- To the right -->
+    <div class="pull-right hidden-xs">
+      <i class="glyphicon glyphicon-shopping-cart"></i>&nbsp;<b>FreshCarton</b>
+    </div>
+    <!-- Default to the left -->
+    <strong>Copyright &copy; 2016.</strong> All rights reserved.
+  </footer>
+
+</div>
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+  $('a[href="#"]').each(function(i){
+ 	 $(this).removeAttr("href");
+ 	 $(this).addClass("MyButton");
+   });
+  $.AdminLTE.layout.activate();
+  $.AdminLTE.layout.fix();
+  //$.AdminLTE.layout.fixSidebar();
+});
+</script>
