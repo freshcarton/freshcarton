@@ -16,17 +16,24 @@ var math = require('mathjs');
 var request = require('request');
 var braintree = require("braintree");
 var gateway = braintree.connect({
-    environment: braintree.Environment.Sandbox,
-    merchantId: "2t62rpghphf9nmjv",
-    publicKey: "vn3dpth2n3zjxb3f",
-    privateKey: "6ca66a7927540f69e80143078b900ac1"
+    environment: braintree.Environment.Production,
+    merchantId: "",
+    publicKey: "",
+    privateKey: ""
 });
 /* Customer App API */
 
 router
 .get('/store/api/paymentservice.js',function(req, res, next) {
   res.setHeader('content-type','text/javascript');
-  res.render('freshmarket_services');
+  gateway.clientToken.generate({}, function (err, response) {
+	if(err){
+		res.render('freshmarket_services',{clientToken: "unknown"});
+	}
+  	var clientToken = response.clientToken;
+	res.render('freshmarket_services',{clientToken: clientToken});
+  });
+  /*res.render('freshmarket_services'); */
 })
 .get('/store/api/customer/',function(req, res, next) {
   user.login(requestparameters.getBasicAuthDetais(req)).then(function(result){
@@ -123,15 +130,16 @@ router
     });
 })
 .post('/store/api/customer/:customerid/orders/',function(req,res,next){
-    console.log("i m here");
-    console.log(req.query.token);
+    //console.log("i m here");
+    //console.log(req.query.token);
     user.get({authkey:req.query.token}).then(function(user){
         if(user.parentType=='customer'){
+	console.log(user.email);
 			var _reqp=requestparameters.getPostParameters(req);
 			var _json=new Buffer(_reqp['json'], 'base64').toString('ascii');
 			var _params=JSON.parse(_json);
 			var _address=_params.customer.deliveryAddress;
-			_address['email']=_params.customer.email;
+			//_address['email']=user.email;
 			customer.findById(req.params.customerid).then(function(_newcustomer){
 				customer
 					.addContact(_newcustomer,{
@@ -159,10 +167,10 @@ router
 								CustomerSignatureImageId:0,
 								VendorContactAddressBookId:0,
 								TotalAmount:0,
-								deliveryfee:1
+								deliveryfee:6.99
 							};
 							order.create(_orderparams,_params.items).then(function(_neworder){
-								res.json({rc:0,message:'order placed succesfully ',customer:_newcustomer.id,order:_neworder.id,subtotalamount:_neworder.TotalAmount,totalamount:_neworder.TotalAmount+_neworder.TotalAmount*0.075,tax:_neworder.TotalAmount*0.075,deliveryfee:1.0,});
+								res.json({rc:0,message:'order placed succesfully ',customer:_newcustomer.id,order:_neworder.id,subtotalamount:_neworder.TotalAmount,totalamount:_neworder.TotalAmount+6.99,tax:0,deliveryfee:6.99,});
 							});
 
 						})
@@ -195,7 +203,7 @@ router
 			var _tax=0;
 			var _orderamount=_neworder.TotalAmount;
 			var _totalamount=0;
-			var _deliveryfree=1;
+			var _deliveryfree=6.99;
 			var _tips=0;
 			var _items=_params.items;
 
@@ -203,8 +211,8 @@ router
 				_tips=parseFloat(_params.tips);
 			}
 
-			var _taxAmount=parseFloat(_orderamount*0.075);
-			var _totalAmounted=parseFloat(_orderamount+_taxAmount+_tips+1.0);
+			var _taxAmount=0;
+			var _totalAmounted=parseFloat(_orderamount+_taxAmount+_tips+_deliveryfree);
 			_tax=math.round(_taxAmount,2);
 			_totalamount=math.round(_totalAmounted,2);
 

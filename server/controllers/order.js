@@ -305,6 +305,7 @@ var Order = {
 				options.TotalAmount=sum;
 				models.NewOrder.create(options).then(function(neworder){
 					resolve(neworder);
+					/*
 					var _vendors=[];
 					var _nitems=_items.length;
 					for(var _j=0;_j<_nitems;_j++){
@@ -316,6 +317,7 @@ var Order = {
 					}).catch(function (error) {
 						reject(error);
 					});
+					*/
 				}).catch(function (error) {
 						console.log(error);
 						reject(error);

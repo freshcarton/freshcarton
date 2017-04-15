@@ -1,7 +1,7 @@
 /*
- * Description:         This controller is related to address validation 
+ * Description:         This controller is related to address validation
  *                      and redirecting to next vendor listing page
- * @author:             Bidyabrata (bidyabrata.biswas@mastiska.com) 
+ * @author:             Bidyabrata (bidyabrata.biswas@mastiska.com)
  * @copyright:          Mastiska (http://www.mastiska.com) & aquaAPI LLC (http://www.aquaapi.com)
  * @version:            1.0.0
  */
@@ -95,7 +95,7 @@ freshMarketApp.controller('deliveryCtrl', function ($scope, $rootScope, $http, $
         $scope.savedAddress = savedAddress;
         // $ionicPopup.alert({
         //     title: 'Oops!',
-        //     template: savedAddress  
+        //     template: savedAddress
         // });
 
         //saveAddressNew();
@@ -142,7 +142,7 @@ freshMarketApp.controller('deliveryCtrl', function ($scope, $rootScope, $http, $
     };
 
     $scope.setDeliveryPref = function () {
-        //console.log("checking address");
+        console.log("checking address");
                           if(checkAddress()){
         var cartedProducts = JSON.parse(localStorage.getItem('cartedItems'));
         cartedProducts.deliverySchedule = $scope.deliverySchedule;
@@ -174,7 +174,7 @@ freshMarketApp.controller('deliveryCtrl', function ($scope, $rootScope, $http, $
             $scope.modal.show();
         });
     };
-      
+
       function checkAddress(){
           var addressString = '';
           if ($scope.savedAddress.addressType !== null && $scope.savedAddress.addressType.length>1) {
@@ -205,7 +205,7 @@ freshMarketApp.controller('deliveryCtrl', function ($scope, $rootScope, $http, $
 
           $scope.deliveryAddress = addressString;
                           return true;
-      
+
       }
 
     function saveAddressNew() {
@@ -231,7 +231,7 @@ freshMarketApp.controller('deliveryCtrl', function ($scope, $rootScope, $http, $
         $scope.deliveryAddress = addressString;
         localStorage.setItem('userAddress',JSON.stringify($scope.savedAddress));
     }
-                          
+
   function setDeliveryAddress() {
       var addressString = '';
       if ($scope.savedAddress.addressType !== null) {
@@ -266,17 +266,17 @@ freshMarketApp.controller('deliveryCtrl', function ($scope, $rootScope, $http, $
     $scope.addressbook = [
         {
             'city':'sunnyvale',
-            'state':'ca',    
+            'state':'ca',
             'formattedaddress':'655 S. Fair Oaks Ave, i311, sunnyvale, ca, 94086'
         },
         {
             'city':'sunnyvale',
-            'state':'ca',    
+            'state':'ca',
             'formattedaddress':'655 S. Fair Oaks Ave, i312, sunnyvale, ca, 94086'
         },
         {
             'city':'sunnyvale',
-            'state':'ca',    
+            'state':'ca',
             'formattedaddress':'655 S. Fair Oaks Ave, i313, sunnyvale, ca, 94086'
         }
     ]
