@@ -463,11 +463,12 @@ router
     }
 })
 .get('/store/api/vendors/', function(req, res, next) {
-    if(req.query.street == undefined || req.query.city == undefined || req.query.state==undefined ){
+    //req.query.street == undefined || req.query.city == undefined || req.query.state==undefined
+    if(req.query.zipcode){
         res.status(404).send('Not found');
     }else{
 		try{
-		  request('https://maps.googleapis.com/maps/api/geocode/json?address='+req.query.street+',+'+req.query.city+',+'+req.query.state, function (error, response, body) {
+		  request('https://maps.googleapis.com/maps/api/geocode/json?address='+req.query.zipcode, function (error, response, body) {
 			  if (!error && response.statusCode == 200) {
 					var data=JSON.parse(body);
 					data=JSON.parse(body);

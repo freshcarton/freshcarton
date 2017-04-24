@@ -10,20 +10,20 @@
                 </div> -->
                 <div class="sbHeader">
                     {{vendor.name}}
-                </div>                
+                </div>
                 <div class="item item-thumbnail-left" ng-repeat="product in cartedProducts" ng-if="product.vendorDtails.id==vendor.id">
                     <img ng-src="{{product.image}}">
                     <h2>{{product.name}}</h2>
-                    <p>{{product.Inventories[0].unitprice}}/{{product.model}}</p>
-                    <span class="item-note">{{product.quantity}} {{product.model}}</span>
+                    <p>${{product.Inventories[0].unitprice}} / {{product.model}}</p>
+                    <!--<span class="item-note">{{product.quantity}} {{product.model}}</span>-->
                     <div>
                         <button class="smlBtn icon ion-android-remove-circle" ng-click="reducProductQuantity(product)"></button>
-                        <span class="quantity">{{product.quantity}} {{product.model}}</span>
+                        <span class="quantity">{{product.quantity}} </span>
                         <button class="smlBtn icon ion-ios-plus" ng-click="incProductQuantity(product)"></button>
                     </div>
                     <a style="line-height: 70px;" ng-click="removeItem(product)" class="cartLink ion ion-trash-a"></a>
                 </div>
-            </div>    
+            </div>
             <div  class="nothing-to-show emptycart" ng-hide="dataAvailable">
                 <span class="icon ion-android-cart"></span>
                 <p>Currently your cart is empty.</p>

@@ -37,8 +37,10 @@ freshMarketApp.controller('productCtrl', function ($scope, $rootScope, $http, $i
                         var indexKey = $scope.cartedItems.cartedItemsId.indexOf(prodId);
                         if (indexKey === (-1)) {
                             products[j].quantity = 1;
+                            products[j].incart = 0;
                         } else {
                             products[j].quantity = $scope.cartedItems.cartedItems[indexKey].quantity;
+                            products[j].incart = 1;
                         }
                         products[j]['vendorDtails'] = {
                             'id': vendor.id,
@@ -50,7 +52,7 @@ freshMarketApp.controller('productCtrl', function ($scope, $rootScope, $http, $i
                     $scope.vendors[i].products = products;
                     $scope.loading = false;
                     $scope.dataAvailable = true;
-                    
+
                 });
             })($scope.vendors[i], i);
         }
@@ -65,7 +67,7 @@ freshMarketApp.controller('productCtrl', function ($scope, $rootScope, $http, $i
             $scope.modal.show();
         });
     };
-    
+
     /* close pop up */
     $scope.closeLogin = function () {
         $scope.modal.hide();
@@ -99,6 +101,7 @@ freshMarketApp.controller('productCtrl', function ($scope, $rootScope, $http, $i
             }, 10000);
         }
         if (product.quantity > 0) {
+            product.incart = 1;
             $scope.cartedItems.cartedItemsId.push(prodId);
             $scope.cartedItems.cartedItems.push(product);
         }
@@ -116,7 +119,7 @@ freshMarketApp.controller('productCtrl', function ($scope, $rootScope, $http, $i
         $rootScope.cartCount = $scope.cartedItems.cartCount;
         localStorage.setItem('cartedItems', JSON.stringify($scope.cartedItems));
     };
-    
+
     $scope.addToCartFromPouUp = function (product) {
         var prodId = product.id;
         var arrIndex = $scope.cartedItems.cartedItemsId.indexOf(prodId);

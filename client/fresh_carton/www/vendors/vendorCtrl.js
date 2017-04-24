@@ -16,16 +16,18 @@ freshMarketApp.controller('vendorCtrl', function ($scope,$rootScope, $http, $loc
         var street = savedAddress.street;
         var city = savedAddress.city;
         var state = savedAddress.state;
-        $scope.formattedAddress = city + ', ' + state;
+        var zip = savedAddress.zip;
+        $scope.formattedAddress = '';
 
         $http({
             method: 'GET',
-            url: baseUrl + 'vendors?street=' + street + '&city=' + city + '&state=' + state
+            url: baseUrl + 'vendors?zipcode=' + zip
         }).then(function (response) {
             if (response.status === 200) {
                 var result = response.data;
                 if (result.rc === 0) {
                     $scope.vendors = result.vendors;
+                    $scope.formattedAddress = result.requestedaddress.address;
                     $scope.loading = false;
                     $scope.dataAvailable = true;
                 } else {

@@ -7,9 +7,9 @@
         <form ng-hide="loading" name="addressInput" ng-submit="findVendos()" class="addressForm">
             <div class="col">
                 <!--<input type="text" name="street" required ng-model="address.street" placeholder="Street">-->
-                <input type="text" name="city" required ng-model="address.city" placeholder="city">
-                <input type="text" name="state" required ng-model="address.state" placeholder="state">
-                <button class="submitBtn" ng-disabled=" addressInput.street.$invalid || addressInput.city.$invalid || addressInput.state.$invalid" type="submit">FIND STORE</button>
+                <input type="text" name="zip" required ng-model="address.zip" placeholder="Zipcode">
+<!--                 <input type="text" name="state" required ng-model="address.state" placeholder="state">
+ -->                <button class="submitBtn" ng-disabled=" addressInput.zip.$invalid" type="submit">FIND STORE</button>
                 <button class="dashboardBtn" ng-show='logged' type="button" ng-click="openDashboard()">Dashboard</button>
             </div>
         </form>

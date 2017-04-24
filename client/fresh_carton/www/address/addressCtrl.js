@@ -33,9 +33,10 @@ freshMarketApp.controller('addressCtrl', function ($scope, $rootScope, $location
         var street = '';
         var city = $scope.address.city;
         var state = $scope.address.state;
+        var zipcode = $scope.address.zip;
         $http({
             method: 'GET',
-            url: baseUrl + 'vendors?street=' + street + '&city=' + city + '&state=' + state
+            url: baseUrl + 'vendors?zipcode=' + zipcode
         }).then(function (response) {
             if (response.status === 200) {
                 var result = response.data;

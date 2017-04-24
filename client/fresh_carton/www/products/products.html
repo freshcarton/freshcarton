@@ -16,13 +16,14 @@
                         </a>
 
                         <h2>{{product.name}}</h2>
-                        <p>{{product.Inventories[0].unitprice}}/{{product.model}}</p>
+                        <p>$ {{product.Inventories[0].unitprice}} / {{product.model}}</p>
                         <div>
                             <button class="smlBtn icon ion-android-remove-circle" ng-click="reducProductQuantity(product)"></button>
-                            <span class="quantity">{{product.quantity}} {{product.model}}</span>
+                        <span class="quantity">{{product.quantity}} </span>
                             <button class="smlBtn icon ion-ios-plus" ng-click="incProductQuantity(product)"></button>
                         </div>
-                        <a ng-click="addToCart(product)" class="cartLink ion ion-android-cart"></a>
+                        <!--<a class="cartLink ion ion-android-cart"></a>-->
+                        <button class="cartBtn button ion ion-android-cart" ng-click="addToCart(product)"><span ng-show="product.incart==1" style="color:white"> {{product.quantity}}</span></button>
                     </div>
                 </div>
             </div>
