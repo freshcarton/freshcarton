@@ -479,7 +479,7 @@ router
 .get('/store/api/vendors/', function(req, res, next) {
     //req.query.street == undefined || req.query.city == undefined || req.query.state==undefined
     if(req.query.zipcode==undefined){
-        res.status(404)..json({rc:-1,message:'zipcode not provided'});
+        res.status(404).json({rc:-1,message:'zipcode not provided'});
     }else{
 		try{
 		  request('https://maps.googleapis.com/maps/api/geocode/json?address='+req.query.zipcode, function (error, response, body) {
