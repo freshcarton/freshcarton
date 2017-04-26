@@ -15,12 +15,25 @@ var bodyParser = require('body-parser');
 var math = require('mathjs');
 var request = require('request');
 var braintree = require("braintree");
+/*
+
+remove comment for production
+
 var gateway = braintree.connect({
     environment: braintree.Environment.Production,
     merchantId: "",
     publicKey: "",
     privateKey: ""
 });
+*/
+
+var gateway = braintree.connect({
+    environment: braintree.Environment.Sandbox,
+    merchantId: "2t62rpghphf9nmjv",
+    publicKey: "vn3dpth2n3zjxb3f",
+    privateKey: "6ca66a7927540f69e80143078b900ac1"
+});
+
 /* Customer App API */
 
 router
@@ -31,6 +44,7 @@ router
 		res.render('freshmarket_services',{clientToken: "unknown"});
 	}
   	var clientToken = response.clientToken;
+	clientToken = 'sandbox_dpkzjg9m_2t62rpghphf9nmjv'; // comment  after production	
 	res.render('freshmarket_services',{clientToken: clientToken});
   });
   /*res.render('freshmarket_services'); */
