@@ -1,23 +1,23 @@
 {
   "development": {
-    "username": "talapaku",
-    "password": "tkittu",
+    "username": "sposuser",
+    "password": "shiladitya123",
     "database": "spos",
     "host": "127.0.0.1",
     "port": "5432",
     "dialect": "postgres"
   },
   "test": {
-    "username": "talapaku",
-    "password": "tkittu",
+    "username": "sposuser",
+    "password": "shiladitya123",
     "database": "spos",
     "host": "127.0.0.1",
     "port": "5432",
     "dialect": "postgres"
   },
   "production": {
-    "username": "talapaku",
-    "password": "tkittu",
+    "username": "sposuser",
+    "password": "shiladitya123",
     "database": "spos",
     "host": "127.0.0.1",
     "port": "5432",
