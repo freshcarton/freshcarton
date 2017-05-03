@@ -1,0 +1,17 @@
+{
+  "root": "./log",
+  "pidPath": "log/pids",
+  "sockPath": "log/sock",
+  "loglength": 100,
+  "logstream": false,
+  "columns": [
+    "uid",
+    "command",
+    "script",
+    "forever",
+    "pid",
+    "id",
+    "logfile",
+    "uptime"
+  ]
+}

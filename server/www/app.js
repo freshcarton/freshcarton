@@ -171,17 +171,50 @@ angular.module('store.services', [])
      };
  }])
   .service('$locationservice',['$http',function($http){
-    this.find=function(street,city,state){
+    this.find=function(zipcode){
+      return $http.get('https://maps.googleapis.com/maps/api/geocode/json?address='+zipcode);
+    };
+    this.findByAddress=function(street,city,state){
       street = street.split(' ').join('+');
       return $http.get('https://maps.googleapis.com/maps/api/geocode/json?address='+street+',+'+city+',+'+state);
     };
  }])
+  .service('$marketservice',['$restservice',function($restservice){
+    this.get=function(){
+      return $restservice.get('markets');
+    };
+    this.getById=function(marketid){
+      return $restservice.get('markets/'+marketid);
+    };
+    this.getMarketNames=function(){
+      return $restservice.get('markets.json');
+    };
+    this.create=function(params){
+      return $restservice.post('markets',params);
+    };
+    this.update=function(marketid,params){
+      return $restservice.put('markets/'+marketid,params);
+    };
+    this.addVendor=function(params){
+        return $restservice.post('markets/'+params.marketid+'/vendors/',params);
+    };
+    this.disable=function(marketid){
+      return $restservice.put('markets/'+marketid+'/disable');
+    };
+    this.enable=function(marketid){
+      return $restservice.put('markets/'+marketid+'/enable');
+    };
+
+  }])
  .service('$vendorservice',['$restservice',function($restservice){
     this.get=function(){
       return $restservice.get('vendors');
     };
     this.getById=function(vendorid){
       return $restservice.get('vendors/'+vendorid);
+    };
+    this.getByMarketId=function(marketid){
+      return $restservice.get('markets/'+marketid+'/vendors/');
     };
     this.create=function(params){
       return $restservice.post('vendors',params);
@@ -198,6 +231,13 @@ angular.module('store.services', [])
     this.enable=function(vendorid){
       return $restservice.put('vendors/'+vendorid+'/enable');
     };
+    this.updateMarket=function(vendor){
+      if(vendor.oldmarketid==-1){
+        return $restservice.post('markets/'+vendor.marketid+'/vendors/'+vendor.VendorId+'/');
+      }else{
+        return $restservice.put('markets/'+vendor.marketid+'/vendors/'+vendor.VendorId+'/',{'oldmarketid':vendor.oldmarketid});
+      }
+    }
 
   }])
  .service('$customerservice',['$restservice',function($restservice){
@@ -327,6 +367,9 @@ angular.module('store.controllers', [])
   		}
       else if(toState.name=="app.user.customers" || toState.name=="app.user.customer"){
   			$scope.page="customers";
+  		}
+      else if(toState.name=="app.user.markets" || toState.name=="app.user.market"){
+  			$scope.page="markets";
   		}
     });
 	$scope.logout=function(){
@@ -1294,17 +1337,20 @@ angular.module('store.controllers', [])
     });
   };
 }])
-.controller('VendorController',['$scope','$state','$mdDialog','$vendorservice','$userservice','$locationservice','$dataType', '$vendordata',function($scope,$state,$mdDialog,$vendorservice,$userservice,$locationservice,$dataType,$vendordata) {
+.controller('VendorController',['$scope','$state','$mdDialog','$vendorservice','$userservice','$locationservice','$dataType', '$vendordata','$marketdata',function($scope,$state,$mdDialog,$vendorservice,$userservice,$locationservice,$dataType,$vendordata,$marketdata) {
   $scope.user=$userservice.get();
   $scope.fiterbydisabled=-1;
   $scope.states = ('AL AK AZ AR CA CO CT DE FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS ' +
 	'MO MT NE NV NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY').split(' ').map(function (state) {
     return {abbrev: state};
   });
+  $scope.markets=$marketdata.data.data;
   $scope.showNewVendorForm=false;
   $scope.showNewVendor=function(){
   	$scope.newvendor = {
   	  name: '',
+      marketid:-1,
+      marketname:'undefined',
   	  contactname: '',
   	  addressline1: '',
   	  addressline2: 'none',
@@ -1321,6 +1367,8 @@ angular.module('store.controllers', [])
   };
   $scope.newvendor = {
 		  name: '',
+      marketid:-1,
+      marketname:'undefined',
 		  contactname: '',
 		  addressline1: '',
 		  addressline2: 'none',
@@ -1347,6 +1395,8 @@ angular.module('store.controllers', [])
   $scope.cancelNewVendor=function(){
 	  $scope.newvendor = {
 			  name: '',
+        marketid:-1,
+        marketname:'undefined',
 			  contactname: '',
 			  addressline1: '',
 			  addressline2: '',
@@ -1371,6 +1421,8 @@ angular.module('store.controllers', [])
           if (_vendor.VendorContacts[_i].VendorContactAddressBooks[_j].isprimary == 1) {
             _primary = {
               VendorId: _vendor.id,
+              marketid:-1,
+              marketname:'undefined',
               name:_vendor.name,
               isdeleted:_vendor.isdeleted,
               ContactId:_vendor.VendorContacts[_i].id,
@@ -1392,6 +1444,8 @@ angular.module('store.controllers', [])
           _j--;
           _primary = {
             VendorId: _vendor.id,
+            marketid:-1,
+            marketname:'undefined',
             name:_vendor.name,
             isdeleted:_vendor.isdeleted,
             ContactId:_vendor.VendorContacts[_i].id,
@@ -1418,6 +1472,9 @@ angular.module('store.controllers', [])
           _j = 0;
           _primary = {
             VendorId: _vendor.id,
+            oldmarketid:-1,
+            marketid:-1,
+            marketname:'undefined',
             name:_vendor.name,
             isdeleted:_vendor.isdeleted,
             ContactId:_vendor.VendorContacts[_i].id,
@@ -1436,6 +1493,14 @@ angular.module('store.controllers', [])
         }
       }
     }
+
+    var _cnt = _vendor.Markets.length;
+    if(_cnt>0){
+      _primary.oldmarketid=_vendor.Markets[0].id;
+      _primary.marketid=_vendor.Markets[0].id;
+      _primary.marketname=_vendor.Markets[0].name;
+    }
+
     return _primary;
   };
   if($dataType=='vendors'){
@@ -1450,6 +1515,8 @@ angular.module('store.controllers', [])
       if (_abcnt > 0) {
           _primary = {
             id: _data.id,
+            marketid:-1,
+            marketname:'undefined',
             name: _data.name,
             isdeleted: _data.isdeleted,
             ContactId:_data.VendorContacts[_i].id,
@@ -1464,6 +1531,8 @@ angular.module('store.controllers', [])
       }else{
           _primary = {
             id: _data.id,
+            marketid:-1,
+            marketname:'undefined',
             name: _data.name,
             isdeleted: _data.isdeleted,
             ContactName:'n/a',
@@ -1484,6 +1553,9 @@ angular.module('store.controllers', [])
     _primary = getPrimary(_data);
     $scope.vendor = {
       id: _data.id,
+      oldmarketid:-1,
+      marketid:-1,
+      marketname:'undefined',
       name: _data.name,
       isdeleted:_data.isdeleted,
       createdAt: _data.createdAt,
@@ -1565,6 +1637,362 @@ angular.module('store.controllers', [])
                 $scope.$broadcast('$VendorAddedProduct',{'newproduct':response.data});
             }
           });
+    };
+
+    $scope.updateVendorMarket=function(){
+        $scope.backup.marketname=$scope.backup.marketid.name;
+        $scope.backup.marketid=$scope.backup.marketid.id;
+        $vendorservice.updateMarket($scope.backup).success(function(response){
+            if(response.rc>=0){
+              $scope.vendor.primary = angular.copy($scope.backup);
+            }
+          });
+    }
+
+  }
+}])
+.controller('MarketController',['$scope','$state','$mdDialog','$marketservice','$userservice','$locationservice','$dataType', '$marketdata','$vendorservice',function($scope,$state,$mdDialog,$marketservice,$userservice,$locationservice,$dataType,$marketdata,$vendorservice) {
+  $scope.user=$userservice.get();
+  $scope.fiterbydisabled=-1;
+  $scope.states = ('AL AK AZ AR CA CO CT DE FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS ' +
+	'MO MT NE NV NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY').split(' ').map(function (state) {
+    return {abbrev: state};
+  });
+  $scope.showNewMarketForm=false;
+  $scope.showNewMarket=function(){
+  	$scope.newmarket = {
+  	  name: '',
+  	  contactname: '',
+  	  addressline1: '',
+  	  addressline2: 'none',
+  	  city: '',
+  	  state: '',
+  	  country: 'USA',
+  	  zipcode: '',
+  	  email: 'na@default',
+  	  phone: '',
+  	  latitude:0.0,
+  	  longitude:0.0
+  	};
+  	$scope.showNewMarketForm=true;
+  };
+  $scope.newmarket = {
+		  name: '',
+		  contactname: '',
+		  addressline1: '',
+		  addressline2: 'none',
+		  city: '',
+		  state: '',
+		  country: 'USA',
+		  zipcode: '',
+		  email: 'na@default',
+		  phone: '',
+		  latitude:0.0,
+		  longitude:0.0
+  };
+ $scope.create=function(newmarket){
+     newmarket.street=newmarket.addressline1+" "+newmarket.addressline2;
+     $marketservice.create(newmarket).success(function(data){
+         if(data.rc>=0){
+           $state.go('app.user.market',{usertype: $scope.user.usertype,userid:$scope.user.id,marketid:data.MarketId});
+         }
+       });
+  };
+  $scope.addNewMarketFrom=function(){
+	  $scope.showNewMarketForm=true;
+  };
+  $scope.cancelNewMarket=function(){
+	  $scope.newmarket = {
+			  name: '',
+			  contactname: '',
+			  addressline1: '',
+			  addressline2: '',
+			  city: '',
+			  state: '',
+			  country: 'USA',
+			  zipcode: '',
+			  email: 'na@default',
+			  phone: '',
+			  latitude:0.0,
+			  longitude:0.0
+	  };
+	  $scope.showNewMarketForm=false;
+  };
+  function getPrimary(_market) {
+    var _foundprimary = false;
+    var _cnt = _market.MarketAddressBooks.length;
+    var _primary = {
+      MarketId: _market.id,
+      name:_market.name,
+      isdeleted:_market.isdeleted,
+      ContactId:undefined,
+      ContactName:'',
+      ContactAddressBookId: undefined,
+      address:'',
+      addressline1: '',
+      addressline2: '',
+      state:'',
+      city: '',
+      country: '',
+      email: '',
+      phone: '',
+      zipcode: undefined
+    };      
+    
+    if (_cnt>0){
+      var _i=0;
+      _primary = {
+        MarketId: _market.id,
+        name:_market.name,
+        isdeleted:_market.isdeleted,
+        ContactId:_market.MarketContacts[_i].id,
+        ContactName:_market.MarketContacts[_i].name,
+        ContactAddressBookId: _market.MarketAddressBooks[_i].id,
+        address:_market.MarketAddressBooks[_i].formattedaddress,
+        addressline1: _market.MarketAddressBooks[_i].addressline1,
+        addressline2: _market.MarketAddressBooks[_i].addressline2,
+        state:'CA',
+        city: _market.MarketAddressBooks[_i].city,
+        country: _market.MarketAddressBooks[_i].country,
+        email: _market.MarketAddressBooks[_i].email,
+        phone: _market.MarketAddressBooks[_i].phone,
+        zipcode: _market.MarketAddressBooks[_i].zipcode
+      };      
+    }
+    /*
+    for (_i = 0; _i < _cnt && !_foundprimary; _i++) {
+      if (_market.MarketAddressBooks[_i].isprimary == 1) {
+        _abcnt = _market.MarketContacts[_i].MarketContactAddressBooks.length;
+        for (_j = 0; _j < _abcnt && !_foundprimary; _j++) {
+          if (_market.MarketContacts[_i].MarketContactAddressBooks[_j].isprimary == 1) {
+            _primary = {
+              MarketId: _market.id,
+              name:_market.name,
+              isdeleted:_market.isdeleted,
+              ContactId:_market.MarketContacts[_i].id,
+              ContactName:_market.MarketContacts[_i].name,
+              ContactAddressBookId: _market.MarketContacts[_i].MarketContactAddressBooks[_j].id,
+              addressline1: _market.MarketContacts[_i].MarketContactAddressBooks[_j].addressline1,
+              addressline2: _market.MarketContacts[_i].MarketContactAddressBooks[_j].addressline2,
+              state:'CA',
+              city: _market.MarketContacts[_i].MarketContactAddressBooks[_j].city,
+              country: _market.MarketContacts[_i].MarketContactAddressBooks[_j].country,
+              email: _market.MarketContacts[_i].MarketContactAddressBooks[_j].email,
+              phone: _market.MarketContacts[_i].MarketContactAddressBooks[_j].phone,
+              zipcode: _market.MarketContacts[_i].MarketContactAddressBooks[_j].zipcode,
+            };
+            _foundprimary = true;
+          }
+        }
+        if (!_foundprimary) {
+          _j--;
+          _primary = {
+            MarketId: _market.id,
+            name:_market.name,
+            isdeleted:_market.isdeleted,
+            ContactId:_market.MarketContacts[_i].id,
+            ContactName:_market.MarketContacts[_i].name,
+            ContactAddressBookId: _market.MarketContacts[_i].MarketContactAddressBooks[_j].id,
+            addressline1: _market.MarketContacts[_i].MarketContactAddressBooks[_j].addressline1,
+            addressline2: _market.MarketContacts[_i].MarketContactAddressBooks[_j].addressline2,
+            city: _market.MarketContacts[_i].MarketContactAddressBooks[_j].city,
+            state:'CA',
+            country: _market.MarketContacts[_i].MarketContactAddressBooks[_j].country,
+            email: _market.MarketContacts[_i].MarketContactAddressBooks[_j].email,
+            phone: _market.MarketContacts[_i].MarketContactAddressBooks[_j].phone,
+            zipcode: _market.MarketContacts[_i].MarketContactAddressBooks[_j].zipcode,
+          };
+          _foundprimary = true;
+        }
+      }
+    }
+    if (!_foundprimary) {
+      _j = 0;
+      for (_i = 0; _i < _cnt && !_foundprimary; _i++) {
+        _abcnt = _data.MarketContacts[_i].MarketContactAddressBooks.length;
+        if (_abcnt > 0) {
+          _j = 0;
+          _primary = {
+            MarketId: _market.id,
+            name:_market.name,
+            isdeleted:_market.isdeleted,
+            ContactId:_market.MarketContacts[_i].id,
+            ContactName:_market.MarketContacts[_i].name,
+            ContactAddressBookId: _market.MarketContacts[_i].MarketContactAddressBooks[_j].id,
+            addressline1: _market.MarketContacts[_i].MarketContactAddressBooks[_j].addressline1,
+            addressline2: _market.MarketContacts[_i].MarketContactAddressBooks[_j].addressline2,
+            city: _market.MarketContacts[_i].MarketContactAddressBooks[_j].city,
+            state:'CA',
+            country: _market.MarketContacts[_i].MarketContactAddressBooks[_j].country,
+            email: _market.MarketContacts[_i].MarketContactAddressBooks[_j].email,
+            phone: _market.MarketContacts[_i].MarketContactAddressBooks[_j].phone,
+            zipcode: _market.MarketContacts[_i].MarketContactAddressBooks[_j].zipcode,
+          };
+          _foundprimary = true;
+        }
+      }
+    }
+    */
+    return _primary;
+  };
+  if($dataType=='markets'){
+      $scope.by_market="";
+      $scope.markets=[];
+    _count=$marketdata.data.data.length;
+    for(_c=0;_c<_count;_c++){
+      _data=$marketdata.data.data[_c];
+      _cnt=_data.length;
+      _i=0; _j=0;
+      $scope.markets.push(_data);
+      /*
+      _abcnt = _data.MarketContacts[_i].MarketContactAddressBooks.length;
+      if (_abcnt > 0) {
+          _primary = {
+            id: _data.id,
+            name: _data.name,
+            isdeleted: _data.isdeleted,
+            ContactId:_data.MarketContacts[_i].id,
+            ContactAddressBookId: _data.MarketContacts[_i].MarketContactAddressBooks[_j].id,
+            ContactName: _data.MarketContacts[_i].name,
+            address: _data.MarketContacts[_i].MarketContactAddressBooks[_j].formattedaddress,
+            state:'CA',
+            city: _data.MarketContacts[_i].MarketContactAddressBooks[_j].city,
+            phone: _data.MarketContacts[_i].MarketContactAddressBooks[_j].phone,
+            zipcode: _data.MarketContacts[_i].MarketContactAddressBooks[_j].zipcode,
+          };
+      }else{
+          _primary = {
+            id: _data.id,
+            name: _data.name,
+            isdeleted: _data.isdeleted,
+            ContactName:'n/a',
+            ContactId:0,
+            ContactAddressBookId:0,
+            state:'CA',
+            address:'n/a',
+            city: 'n/a',
+            phone: 'n/a',
+            zipcode: 'n/a',
+          };
+      }
+      $scope.markets.push(_primary);
+      */
+      
+    }
+  }
+  if($dataType=='market') {
+    _data = $marketdata.data.data;
+    _primary = getPrimary(_data);
+    $scope.market = {
+      id: _data.id,
+      name: _data.name,
+      isdeleted:_data.isdeleted,
+      createdAt: _data.createdAt,
+      updatedAt: _data.updatedAt,
+    };
+    $scope.market.primary = angular.copy(_primary);
+    $scope.backup = angular.copy(_primary);
+
+    $scope.DisableMarket=function(){
+      $marketservice.disable($scope.market.id).success(function(data){
+          if(data.rc>=0){
+            $scope.market.primary.isdeleted=1;
+            $scope.backup.isdeleted=1;
+          }
+      });
+    };
+
+    $scope.EnableMarket=function(){
+      $marketservice.enable($scope.market.id).success(function(data){
+          if(data.rc>=0){
+            $scope.market.primary.isdeleted=0;
+            $scope.backup.isdeleted=0;
+          }
+      });
+    };
+
+    $scope.cancelUpdateMarket=function(){
+      $scope.backup=angular.copy($scope.market.primary);
+    };
+
+    $scope.updateMarket=function(){
+      $marketservice.update($scope.market.id,$scope.backup).success(function(data){
+          if(data.rc>=0){
+            $scope.market.primary = angular.copy($scope.backup);
+          }
+        });
+    };
+    $scope.newvendor={
+            name: '',
+            marketid:$scope.market.id,
+            marketname:$scope.market.primary.name,
+            contactname: undefined,
+            addressline1: '',
+            addressline2: 'none',
+            city: '',
+            state: '',
+            country: 'USA',
+            zipcode: '',
+            email: 'na@default',
+            phone: '',
+            latitude:0.0,
+            longitude:0.0
+    };
+    $scope.showNewVendorForm=false;
+    $scope.addNewVendorForm=function(){
+        $scope.newvendor={
+            name: '',
+            marketid:$scope.market.id,
+            marketname:$scope.market.primary.name,
+            contactname: undefined,
+            addressline1: '',
+            addressline2: 'none',
+            city: '',
+            state: '',
+            country: 'USA',
+            zipcode: '',
+            email: 'na@default',
+            phone: '',
+            latitude:0.0,
+            longitude:0.0
+        };
+        $scope.showNewVendorForm=true;
+    };
+    $scope.cancelNewVendorForm=function(){
+        $scope.newvendor={
+            name: '',
+            marketid:$scope.market.id,
+            marketname:$scope.market.primary.name,
+            contactname: undefined,
+            addressline1: '',
+            addressline2: 'none',
+            city: '',
+            state: '',
+            country: 'USA',
+            zipcode: '',
+            email: 'na@default',
+            phone: '',
+            latitude:0.0,
+            longitude:0.0
+        };
+        $scope.showNewVendorForm=false;
+    };
+    $scope.addVendor=function(newvendor){
+     newvendor.street=newvendor.addressline1+" "+newvendor.addressline2;
+     $vendorservice.create(newvendor).success(function(data){
+         if(data.rc>=0){
+          //  $state.go('app.user.vendor',{usertype: $scope.user.usertype,userid:$scope.user.id,vendorid:data.VendorId});
+            	$scope.showNewVendorForm=false;
+              $scope.$broadcast('$MarketAddedVendor',{'newvendor':response.data});
+         }
+       });
+      
+        // $marketservice.addVendor(newvendor).success(function(response){
+        //     if(response.rc>=0){
+        //     	$scope.showNewVendorForm=false;
+        //         $scope.$broadcast('$MarketAddedVendor',{'newvendor':response.data});
+        //     }
+        //   });
     };
   }
 }])
@@ -1797,7 +2225,7 @@ angular
 .run(function ($rootScope, $state, $stateParams,$http,$userservice) {
     $rootScope.$state = $state;
     $rootScope.$stateParams = $stateParams;
-    $rootScope.$domain="http://api.freshcarton.com";
+    $rootScope.$domain="http://dev.freshcarton.com";
     $rootScope.isLogged=false; 
     $rootScope.isLocked=false;
     $rootScope.viewclass="hold-transition";
@@ -2070,6 +2498,7 @@ angular
       resolve:{
     	  $menudata:function(){return undefined;},
           $dataType:function(){return "vendors";},
+          $marketdata:function(){return ''},
           $vendordata:['$stateParams','$vendorservice',
             function($stateParams,$vendorservice){
               return $vendorservice.get();
@@ -2114,14 +2543,18 @@ angular
             function($stateParams,$vendorservice){
               return $vendorservice.getById($stateParams['vendorid']);
             }],
-		$orderdata:['$stateParams','$orderservice',
-		  function($stateParams,$orderservice){
-		    return $orderservice.getByVendor($stateParams['vendorid']);
-		  }],
-      $productdata:['$stateParams','$productservice',
-          function($stateParams,$productservice){
-            return $productservice.getByVendor($stateParams['vendorid']);
-          }]
+          $orderdata:['$stateParams','$orderservice',
+            function($stateParams,$orderservice){
+              return $orderservice.getByVendor($stateParams['vendorid']);
+            }],
+          $productdata:['$stateParams','$productservice',
+            function($stateParams,$productservice){
+              return $productservice.getByVendor($stateParams['vendorid']);
+            }],
+          $marketdata:['$stateParams','$marketservice',
+            function($stateParams,$marketservice){
+              return $marketservice.getMarketNames();
+            }]
       },
     })
     .state('app.user.customers', {
@@ -2250,6 +2683,68 @@ angular
       		  }],
       },
     })
+   .state('app.user.markets', {
+      url: '/{usertype:[a-zA-Z0-9]+}@{userid:[a-zA-Z0-9]+}/markets/',
+      views:{
+          "content":{
+              templateUrl: function($rootScope){
+            	  $rootScope.page="markets";
+            	  $rootScope.viewclass="hold-transition skin-blue fixed layout-top-nav";
+            	  return '/www/views/'+$rootScope['usertype']+'/layout.html'
+              }
+            },
+          "body@app.user.markets":{
+              templateUrl: function($rootScope){return '/www/views/'+$rootScope['usertype']+'/markets.html'},
+              controller: 'MarketController',
+          }
+      },
+      resolve:{
+    	  $menudata:function(){return undefined;},
+          $dataType:function(){return "markets";},
+          $marketdata:['$stateParams','$marketservice',
+            function($stateParams,$marketservice){
+              return $marketservice.get();
+            }],
+      }
+    })
+    .state('app.user.market', {
+      url: '/{usertype:[a-zA-Z0-9]+}@{userid:[a-zA-Z0-9]+}/markets/{marketid:[a-zA-Z0-9]+}/',
+      views:{
+          "content":{
+              templateUrl: function($rootScope){
+            	  $rootScope.page="markets";
+            	  $rootScope.viewclass="hold-transition skin-blue fixed layout-top-nav";
+            	  return '/www/views/'+$rootScope['usertype']+'/layout.html'
+              }
+            },
+	        "body@app.user.market":{
+	          templateUrl: function($rootScope){
+	              return '/www/views/'+$rootScope['usertype']+'/market.html'
+	          },
+	          controller: 'MarketController',
+	        },
+	        "marketvendors@app.user.market":{
+		          templateUrl: function($rootScope){
+		              return '/www/views/'+$rootScope['usertype']+'/market.vendors.html'
+		          },
+		          controller: 'VendorController',
+		     }
+      },
+      resolve:{
+    	  $menudata:function(){return undefined;},
+          $dataType:function(){return "market";},
+          $productType:function(){return "products";},
+          $orderType:function(){return "orders";},
+          $marketdata:['$stateParams','$marketservice',
+            function($stateParams,$marketservice){
+              return $marketservice.getById($stateParams['marketid']);
+          }],
+          $vendordata:['$stateParams','$vendorservice',
+            function($stateParams,$vendorservice){
+              return $vendorservice.getByMarketId($stateParams['marketid']);
+          }]
+      },
+    })    
   ;
   $urlRouterProvider.otherwise("/app/login");
 }])

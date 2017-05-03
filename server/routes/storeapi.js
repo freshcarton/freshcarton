@@ -76,6 +76,14 @@ router
       res.json({rc:-1,message:err.message,products:{}});
     });
 })
+.get('/store/api/vendors/:vendorid/products/:id/recommendations/',function(req,res,next){
+    product.getRecommendation(req.params.id).then(function(recommendations){
+      res.json({rc:0,id:req.params.id,data:recommendations});
+    }).catch(function(err){
+      console.log(err);
+      res.json({rc:-1,message:'Product Recommendation Is not found',data:[],details:err});
+    });
+})
 .get('/customer/api/vendors/:id/',function(req,res,next){
     if(req.query.callback == undefined || req.query.token == undefined){
         res.status(404).send('Not found');

@@ -1,6 +1,6 @@
 'use strict';
 module.exports = function(sequelize, DataTypes) {
-  var Vendor = sequelize.define('Vendor', {
+  var Market = sequelize.define('Market', {
       id: {
           allowNull: false,
           autoIncrement: true,
@@ -14,20 +14,15 @@ module.exports = function(sequelize, DataTypes) {
               notEmpty: true,
               is: ["^[a-zA-Z0-9 \-\\\/\#\.]+$", 'i']
           }
-      },
-      isdeleted:{
-        type:DataTypes.INTEGER,
-        defaultValue:0
       }
   }, {
     classMethods: {
       associate: function(models) {
-          Vendor.hasMany(models.VendorContact,{onDelete: 'cascade', hooks: true });
-          Vendor.hasMany(models.VendorAddressBook,{onDelete: 'cascade', hooks: true });
-          Vendor.belongsToMany(models.Product, {through:models.ProductVendor});
-          Vendor.belongsToMany(models.Market, {through:models.MarketVendor});          
+          Market.hasMany(models.MarketContact,{onDelete: 'cascade', hooks: true });
+          Market.hasMany(models.MarketAddressBook,{onDelete: 'cascade', hooks: true });
+          Market.hasMany(models.MarketVendor,{onDelete: 'cascade', hooks: true });
       }
     }
   });
-  return Vendor;
+  return Market;
 };

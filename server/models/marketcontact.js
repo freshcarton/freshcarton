@@ -1,12 +1,16 @@
 'use strict';
 module.exports = function(sequelize, DataTypes) {
-  var Vendor = sequelize.define('Vendor', {
+  var MarketContact = sequelize.define('MarketContact', {
       id: {
           allowNull: false,
           autoIncrement: true,
           primaryKey: true,
           type: DataTypes.INTEGER
       },
+      MarketId:{
+        type: DataTypes.INTEGER,
+        allowNull:false
+      },      
       name:{
           type:DataTypes.TEXT,
           allowNull: false,
@@ -15,19 +19,22 @@ module.exports = function(sequelize, DataTypes) {
               is: ["^[a-zA-Z0-9 \-\\\/\#\.]+$", 'i']
           }
       },
+      isprimary:{
+        type:DataTypes.INTEGER,
+        allowNull:false,
+        defaultValue:0
+      },
       isdeleted:{
         type:DataTypes.INTEGER,
+        allowNull:false,
         defaultValue:0
-      }
+      },
+
   }, {
     classMethods: {
       associate: function(models) {
-          Vendor.hasMany(models.VendorContact,{onDelete: 'cascade', hooks: true });
-          Vendor.hasMany(models.VendorAddressBook,{onDelete: 'cascade', hooks: true });
-          Vendor.belongsToMany(models.Product, {through:models.ProductVendor});
-          Vendor.belongsToMany(models.Market, {through:models.MarketVendor});          
       }
     }
   });
-  return Vendor;
+  return MarketContact;
 };

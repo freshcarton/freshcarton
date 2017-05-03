@@ -42,10 +42,12 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
+        console.log(models);
         Product.belongsToMany(models.Part, {through:models.ProductPart});
         Product.belongsToMany(models.Vendor, {through:models.ProductVendor});
         Product.hasMany(models.Inventory);
         Product.hasMany(models.ProductImage);
+        Product.hasMany(models.ProductRecommendation);
       }
     }
   });

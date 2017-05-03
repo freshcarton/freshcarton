@@ -6,47 +6,47 @@ var Promise = require("bluebird");
 var models = require('../models/index.js');
 
 
-var Vendor = {
+var Market = {
     'get':function(options){
        return new Promise(function(resolve,reject) {
-           models.Vendor.findAll({
+           models.Market.findAll({
             include:[
                   {
-                    model: models.VendorContact,
-                    include:{
-                      model:models.VendorContactAddressBook,
-                        attributes:["phone","formattedaddress","city","zipcode"],order:'id desc'
-                    },attributes:["id","isprimary"]
-                  },
+                    model: models.MarketAddressBook,
+                    attributes:["id","phone","formattedaddress","city","zipcode"],order:'id desc'
+                  },                  
+                  {
+                    model: models.MarketContact,
+                    attributes:["id","name"],order:'id desc'
+                  },                  
                 ],
              attributes:["id","name","isdeleted"]
-           }).then(function (vendors) {
-               resolve(vendors);
+           }).then(function (markets) {
+               resolve(markets);
            }).catch(function (error) {
                reject(error);
            });
        });
     },
-    'getVendorsForAPI':function(options){
+    'getMarketsForAPI':function(options){
        return new Promise(function(resolve,reject) {
-           models.Vendor.findAll({
+           models.Market.findAll({
             include:[
                   {
-                    model: models.VendorContact,
-                    include:{
-                      model:models.VendorContactAddressBook,
-                        attributes:["id","phone","formattedaddress","latitude","longitude"],order:'id desc'
-                    },attributes:["id","isprimary"],where:{
-                        isdeleted:0
-                    }
-                  },
+                    model: models.MarketAddressBook,
+                    attributes:["id","phone","formattedaddress","city","zipcode"],order:'id desc'
+                  },                  
+                  {
+                    model: models.MarketContact,
+                    attributes:["id","name"],order:'id desc'
+                  },                  
                 ],
             where:{
                     isdeleted:0
              },
              attributes:["id","name"]
-           }).then(function (vendors) {
-               resolve(vendors);
+           }).then(function (markets) {
+               resolve(markets);
            }).catch(function (error) {
                reject(error);
            });
@@ -54,23 +54,23 @@ var Vendor = {
     },
     'getById':function(id){
         return new Promise(function(resolve,reject) {
-            models.Vendor.findOne({
+            models.Market.findOne({
                 include:[
                   {
-                    model: models.VendorContact,
-                    include:{
-                      model:models.VendorContactAddressBook
-                    },
-                  },{
-                    model: models.Market,attributes:["id","name"]
-                  }
+                    model: models.MarketAddressBook,
+                    order:'id desc'
+                  },                  
+                  {
+                    model: models.MarketContact,
+                    attributes:["id","name"],order:'id desc'
+                  },                  
                 ]
               ,where: {id: id}
-            }).then(function (vendor) {
-                if(vendor.length<=0){
-                    throw new Error("Vendor Not Found");
+            }).then(function (market) {
+                if(market.length<=0){
+                    throw new Error("Market Not Found");
                 }else{
-                    resolve(vendor);
+                    resolve(market);
                 }
             }).catch(function (error) {
                 reject(error);
@@ -79,44 +79,53 @@ var Vendor = {
     },
     'getByIdForAPI':function(id){
         return new Promise(function(resolve,reject) {
-            models.Vendor.findOne({
+            models.Market.findOne({
                 include:[
                   {
-                    model: models.VendorContact,
-                    include:{
-                      model:models.VendorContactAddressBook,
-                      attributes:["phone","formattedaddress","latitude","longitude"],order:'id desc'
-                    },attributes:["id","isprimary"],where:{
-                        isdeleted:0
-                    }
-                  },
+                    model: models.MarketAddressBook,
+                    attributes:["phone","formattedaddress","city","zipcode"],order:'id desc'
+                  },                  
                 ]
               ,where: {id: id}
-            }).then(function (vendor) {
-                if(vendor.length<=0){
-                    throw new Error("Vendor Not Found");
+            }).then(function (market) {
+                if(market.length<=0){
+                    throw new Error("Market Not Found");
                 }else{
-                    resolve(vendor);
+                    resolve(market);
                 }
             }).catch(function (error) {
                 reject(error);
             });
         });
     },
+    'getBasicOnly':function(options){
+       return new Promise(function(resolve,reject) {
+           models.Market.findAll({
+             attributes:["id","name"],
+             where:{
+                 isdeleted:0
+             }
+           }).then(function (markets) {
+               resolve(markets);
+           }).catch(function (error) {
+               reject(error);
+           });
+       });
+    },    
     'create':function(options){
         return new Promise(function(resolve,reject) {
-            models.Vendor.create({
+            models.Market.create({
                 name: options['name']
-            }).then(function (vendor) {
-                resolve(vendor);
+            }).then(function (market) {
+                resolve(market);
             }).catch(function(error){
                 reject(error);
             });
         });
     },
-    'update':function(vendorid,parmas){
+    'update':function(marketid,parmas){
         return new Promise(function(resolve,reject) {
-            models.Vendor.update(parmas,{where:{id:vendorid}}).then(function(results){
+            models.Market.update(parmas,{where:{id:marketid}}).then(function(results){
               resolve(results);
             }).catch(function(error){
               reject(error);
@@ -125,10 +134,10 @@ var Vendor = {
     },
     'disable':function(id){
         return new Promise(function(resolve,reject) {
-            models.Vendor.update({isdeleted:1},{
+            models.Market.update({isdeleted:1},{
                 where:{id:id}
-            }).then(function(vendor){
-                resolve(vendor);
+            }).then(function(market){
+                resolve(market);
             }).catch(function(error){
                 reject(error);
             });
@@ -136,56 +145,56 @@ var Vendor = {
     },
     'enable':function(id){
         return new Promise(function(resolve,reject) {
-            models.Vendor.update({isdeleted:0},{
+            models.Market.update({isdeleted:0},{
                 where:{id:id}
-            }).then(function(vendor){
-                resolve(vendor);
+            }).then(function(market){
+                resolve(market);
             }).catch(function(error){
                 reject(error);
             });
         });
     },
 
-    'destory':function(vendor){
+    'destory':function(market){
         return new Promise(function(resolve,reject) {
-            vendor.destroy().then(function(vendor){
-                resolve(vendor);
+            market.destroy().then(function(market){
+                resolve(market);
             }).catch(function(error){
                 reject(error);
             });
         });
     },
-    'getAddressBookByVendorId':function(id){
+    'getAddressBookByMarketId':function(id){
         return new Promise(function(resolve,reject){
-            models.Vendor.findAll({include:{
-                model:models.VendorAddressBook
+            models.Market.findAll({include:{
+                model:models.MarketAddressBook
             },attributes:["id","name"],
                 where:{
                     id:[
                         id
                     ]
                 }
-            }).then(function(vendor){
-                if(vendor.length<=0){
-                    throw new Error("vendor address not found");
+            }).then(function(market){
+                if(market.length<=0){
+                    throw new Error("market address not found");
                 }else{
-                    resolve(vendor);
+                    resolve(market);
                 }
             }).catch(function(error){
                 reject(error);
             });
         });
     },
-    'getVendorAddressBookById':function(vendorid,id){
+    'getMarketAddressBookById':function(marketid,id){
         return new Promise(function(resolve,reject){
-            models.VendorAddressBook.findOne({
+            models.MarketAddressBook.findOne({
                 where:{
-                    VendorId: vendorid,
+                    MarketId: marketid,
                     id:id
                 }
             }).then(function(address){
                 if(address.length<=0){
-                    throw new Error("no vendor address found");
+                    throw new Error("no market address found");
                 }else{
                     resolve(address);
                 }
@@ -194,16 +203,17 @@ var Vendor = {
             });
         });
     },
-    'addAddressBook':function(vendor,options){
+    'addAddressBook':function(market,options){
         return new Promise(function(resolve,reject) {
-            vendor.createVendorAddressBook(options).then(function(v){
+            market.createMarketAddressBook(options).then(function(v){
                 resolve(v);
             }).catch(function(error){
+                console.log(error);
                 reject(error);
             });
         });
     },
-    'deleteVendorAddressBook':function(address){
+    'deleteMarketAddressBook':function(address){
         return new Promise(function(resolve,reject) {
             address.destroy().then(function(v){
                 resolve(v);
@@ -212,11 +222,11 @@ var Vendor = {
             });
         });
     },
-    'updateVendorAddressBook':function(vendorid,id,values){
+    'updateMarketAddressBook':function(marketid,id,values){
         return new Promise(function(resolve,reject) {
-            models.VendorAddressBook.update(values,{where:{VendorId: vendorid,id:id}}).then(function(affectedrows){
+            models.MarketAddressBook.update(values,{where:{MarketId: marketid,id:id}}).then(function(affectedrows){
                 if(affectedrows<=0){
-                    throw new Error("Vendor Address Not Found");
+                    throw new Error("Market Address Not Found");
                 }else{
                     resolve(affectedrows);
                 }
@@ -225,32 +235,32 @@ var Vendor = {
             });
         });
     },
-    'getContactByVendorId':function(id){
+    'getContactByMarketId':function(id){
         return new Promise(function(resolve,reject){
-            models.Vendor.findAll({include:{
-                model:models.VendorContact
+            models.Market.findAll({include:{
+                model:models.MarketContact
             },attributes:["id","name"],
                 where:{
                     id:[
                         id
                     ]
                 }
-            }).then(function(vendor){
-                if(!vendor || vendor.length<=0){
-                    throw new Error("no vendor found");
+            }).then(function(market){
+                if(!market || market.length<=0){
+                    throw new Error("no market found");
                 }else{
-                    resolve(vendor);
+                    resolve(market);
                 }
             }).catch(function(error){
                 reject(error);
             });
         });
     },
-    'getContactById':function(vendorid,contactid){
+    'getContactById':function(marketid,contactid){
         return new Promise(function(resolve,reject){
-            models.VendorContact.findOne({attributes:["id","name"],
+            models.MarketContact.findOne({attributes:["id","name"],
                 where:{
-                    VendorId: vendorid,
+                    MarketId: marketid,
                     id:contactid
                 }
             }).then(function(contact){
@@ -264,9 +274,9 @@ var Vendor = {
             });
         });
     },
-    'addContact':function(vendor,options){
+    'addContact':function(market,options){
         return new Promise(function(resolve,reject) {
-            vendor.createVendorContact({
+            market.createMarketContact({
                 name: options['name']
             }).then(function (contact) {
                 resolve(contact);
@@ -275,14 +285,14 @@ var Vendor = {
             });
         });
     },
-    'updateContact':function(vendorid,id,values){
+    'updateContact':function(marketid,id,values){
         return new Promise(function(resolve,reject) {
-            models.VendorContact.update(values,{where:{
-                VendorId: vendorid,
+            models.MarketContact.update(values,{where:{
+                MarketId: marketid,
                   id:id
             }}).then(function(affectedrows){
                 if(affectedrows<=0){
-                    throw new Error("Vendor Contact Not Found");
+                    throw new Error("Market Contact Not Found");
                 }else{
                     resolve(affectedrows);
                 }
@@ -300,31 +310,82 @@ var Vendor = {
             });
         });
     },
-    'getAddressBookByContactId':function(vendorid,contactid){
+/*
+        return new Promise(function(resolve,reject) {
+            market.createMarketContact({
+                name: options['name']
+            }).then(function (contact) {
+                resolve(contact);
+            }).catch(function (error) {
+                reject(error);
+            });
+        });
+*/    
+    'addVendor':function(marketid,vendorid){
+        return new Promise(function(resolve,reject) {
+            models.Market.findOne({
+               where:{
+                   id:marketid
+               }
+            }).then(function(m){
+                m.createMarketVendor({
+                    VendorId: vendorid
+                }).then(function (mv) {
+                    resolve(mv);
+                }).catch(function (error) {
+                    reject(error);
+                });
+            }).catch(function(e){
+                reject(e);
+            })
+        });
+    },    
+    'updateVendor':function(newmarketid,oldmarketid,vendorid){
+        return new Promise(function(resolve,reject) {
+            models.MarketVendor.update(
+                {
+                    MarketId:newmarketid
+                },
+                {
+                    where:{
+                        MarketId:oldmarketid,VendorId:vendorid
+                    }
+                }
+            )
+            .then(function(results){
+              resolve(results);
+            }).catch(function(error){
+              reject(error);
+            });
+        });
+    }
+    /*
+
+    'getAddressBookByContactId':function(marketid,contactid){
         return new Promise(function(resolve,reject){
-            models.VendorContact.findAll({include:{
-                model:models.VendorContactAddressBook
+            models.MarketContact.findAll({include:{
+                model:models.MarketContactAddressBook
             },attributes:["id","name"],
                 where:{
-                    VendorId: vendorid,
+                    MarketId: marketid,
                     id:contactid
                 }
-            }).then(function(vendor){
-                if(vendor.length<=0){
+            }).then(function(market){
+                if(market.length<=0){
                     throw new Error("no address found");
                 }else{
-                    resolve(vendor);
+                    resolve(market);
                 }
             }).catch(function(error){
                 reject(error);
             });
         });
     },
-    'getContactAddressBookById':function(vendorcontactid,id){
+    'getContactAddressBookById':function(marketcontactid,id){
         return new Promise(function(resolve,reject){
-            models.VendorContactAddressBook.findOne({
+            models.MarketContactAddressBook.findOne({
                 where:{
-                    VendorContactId: vendorcontactid,
+                    MarketContactId: marketcontactid,
                     id:id
                 }
             }).then(function(address){
@@ -338,11 +399,11 @@ var Vendor = {
             });
         });
     },
-    'addContactAddressBook':function(vendorcontact,options){
+    'addContactAddressBook':function(marketcontact,options){
         options['isprimary']=(options['isprimary']==undefined)?0:options['isprimary'];
         options['isdeleted']=(options['isdeleted']==undefined)?0:options['isdeleted'];
         return new Promise(function(resolve,reject) {
-            vendorcontact.createVendorContactAddressBook(options).then(function(v){
+            marketcontact.createMarketContactAddressBook(options).then(function(v){
                 resolve(v);
             }).catch(function(error){
                 reject(error);
@@ -358,11 +419,11 @@ var Vendor = {
             });
         });
     },
-    'updateContactAddressBook':function(vendorcontactid,id,values){
+    'updateContactAddressBook':function(marketcontactid,id,values){
         return new Promise(function(resolve,reject) {
-            models.VendorContactAddressBook.update(values,{where:{VendorContactId: vendorcontactid,id:id}}).then(function(affectedrows){
+            models.MarketContactAddressBook.update(values,{where:{MarketContactId: marketcontactid,id:id}}).then(function(affectedrows){
                 if(affectedrows<=0){
-                    throw new Error("Vendor Contact Address Not Found");
+                    throw new Error("Market Contact Address Not Found");
                 }else{
                     resolve(affectedrows);
                 }
@@ -371,7 +432,7 @@ var Vendor = {
             });
         });
     },
-
+    
     'getProducts':function(id){
       return new Promise(function(resolve,reject) {
         models.Product.findAll({
@@ -380,7 +441,7 @@ var Vendor = {
               model: models.Inventory,
             },
             {
-              model: models.Vendor,
+              model: models.Market,
               where:{
                 id:id
               }
@@ -401,14 +462,14 @@ var Vendor = {
       options["status"]=1;
       return new Promise(function(resolve,reject) {
 
-        models.Vendor.findOne({
+        models.Market.findOne({
           attributes:["id"],
           where:{id:id}
-        }).then(function(vendor){
-          if(vendor.length<=0){
-            throw new Error("Vendor not Found");
+        }).then(function(market){
+          if(market.length<=0){
+            throw new Error("Market not Found");
           }else{
-            vendor.createProduct(options).then(function(product){
+            market.createProduct(options).then(function(product){
               resolve(product);
             }).catch(function(err){
               console.log(err);
@@ -426,7 +487,7 @@ var Vendor = {
         //      model: models.Inventory,
         //    },
         //    {
-        //      model: models.Vendor,
+        //      model: models.Market,
         //      where:{
         //        id:id
         //      }
@@ -442,11 +503,7 @@ var Vendor = {
         //  reject(error);
         //});
       });
-    }
-
-
-
-
+          }
+      */
 }
-
-module.exports = Vendor;
+module.exports = Market;
