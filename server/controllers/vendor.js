@@ -60,8 +60,10 @@ var Vendor = {
                     model: models.VendorContact,
                     include:{
                       model:models.VendorContactAddressBook
-                    }
-                  },
+                    },
+                  },{
+                    model: models.Market,attributes:["id","name"]
+                  }
                 ]
               ,where: {id: id}
             }).then(function (vendor) {

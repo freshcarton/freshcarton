@@ -13,8 +13,14 @@ module.exports = {
     },
     env_production : {
        "NODE_ENV": "production"
+<<<<<<< HEAD
     },
     instances  : 4,
     exec_mode  : "cluster"
   }]
 }
+=======
+    }
+  }]
+}
+>>>>>>> 4240e34b80b48e6a653bae38bf45e279953df1c9

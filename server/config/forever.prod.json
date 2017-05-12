@@ -2,9 +2,12 @@
     // forever config file
     "uid": "server",
     "append": true,
+<<<<<<< HEAD
     "watch": true,
     "watchIgnoreDotFiles": null,
     "watchIgnorePatterns": "{\\.git,logs,node_modules,tmp}/**",
+=======
+>>>>>>> 4240e34b80b48e6a653bae38bf45e279953df1c9
     "script": "bin/www",
     "sourceDir": "/home/ec2-user/apps/freshcarton/freshcarton/server/",
     "logFile": "/home/ec2-user/apps/freshcarton/freshcarton/server/log/forever.log",
@@ -14,4 +17,8 @@
     "minUptime":1000
 }
 
+<<<<<<< HEAD
 //.foreverignore
+=======
+//.foreverignore
+>>>>>>> 4240e34b80b48e6a653bae38bf45e279953df1c9

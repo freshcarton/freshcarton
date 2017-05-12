@@ -31,6 +31,7 @@ var user=require('../controllers/user.js');
 var employee=require('../controllers/employee.js');
 var customer=require('../controllers/customer.js');
 var vendor=require('../controllers/vendor.js');
+var market=require('../controllers/market.js');
 var order=require('../controllers/order.js');
 var product=require('../controllers/product.js');
 var inventory=require('../controllers/inventory.js');
@@ -100,6 +101,14 @@ webapprouter
     });
 })
 .all('/webapp/vendors/*',function(req,res,next){
+    user.auth({'authkey':req.headers['x-session-token']}).then(function(currentuser){
+        req.currentuser=currentuser;
+        next();
+    }).catch(function(){
+        res.status(404).send('invalid user details');
+    });
+})
+.all('/webapp/markets/*',function(req,res,next){
     user.auth({'authkey':req.headers['x-session-token']}).then(function(currentuser){
         req.currentuser=currentuser;
         next();
@@ -423,13 +432,44 @@ webapprouter
       res.json({rc:-1,message:'few Inventory details are not provided',details:err});
     });
 })
+//--
+.get('/webapp/products/:id/recommendations/',function(req,res,next){
+    product.getRecommendation(req.params.id,
+      requestparameters.getPostParameters(req)
+    ).then(function(recommendations){
+      res.json({rc:0,data:recommendations});
+    }).catch(function(err){
+      console.log(err);
+      res.json({rc:-1,message:'Product Recommendation Is not found',data:[],details:err});
+    });
+})
+.post('/webapp/products/:id/recommendations/',function(req,res,next){
+    var params=requestparameters.getPostParameters(req);
+    console.log(params);
+    product.addRecommendation(req.params.id,params.targetid).then(function(recommendations){
+      res.json({rc:0,data:recommendations});
+    }).catch(function(err){
+      console.log(err);
+      res.json({rc:-1,message:'Product Recommendation not able to add',data:[],details:err});
+    });
+})
+.delete('/webapp/products/:productid/recommendations/:id',function(req,res,next){
+    var params=requestparameters.getPostParameters(req);
+    product.deleteRecommendation(req.params.id,params.targetid).then(function(recommendations){
+      res.json({rc:0,data:recommendations});
+    }).catch(function(err){
+      console.log(err);
+      res.json({rc:-1,message:'Product Recommendation not able to update',data:[],details:err});
+    });
+})
+//--
 .post('/webapp/location/', function(req, res, next) {
 	var _params=requestparameters.getPostParameters(req);
     if(_params.street == undefined || _params.city == undefined || _params.state==undefined ){
         res.status(404).send('Not found');
     }else{
 		try{
-		  request('https://maps.googleapis.com/maps/api/geocode/json?address='+_params.street+',+'+_params.city+',+'+_params.state, function (error, response, body) {
+		  request('https://maps.googleapis.com/maps/api/geocode/json?address='+_params.zipcode, function (error, response, body) {
 			  if (!error && response.statusCode == 200) {
 					var data=JSON.parse(body);
 					data=JSON.parse(body);
@@ -456,8 +496,6 @@ webapprouter
 			console.log(error);
 			res.status(404).json({rc:-1,message:'service not avaliable due to internal error occurred '});
 		}
-
-
 	}
 })
 .get('/webapp/vendors/',function(req,res,next){
@@ -470,8 +508,8 @@ webapprouter
     var params=requestparameters.getPostParameters(req);
 	try{
     params.street=params.addressline1+" "+params.addressline2;
-    console.log('https://maps.googleapis.com/maps/api/geocode/json?address='+params.street+',+'+params.city+',+'+params.state);
-	  request('https://maps.googleapis.com/maps/api/geocode/json?address='+params.street+',+'+params.city+',+'+params.state, function (error, response, body) {
+    console.log('https://maps.googleapis.com/maps/api/geocode/json?address='+params.zipcode);
+	  request('https://maps.googleapis.com/maps/api/geocode/json?address='+params.zipcode, function (error, response, body) {
 		  if (!error && response.statusCode == 200) {
 				var data=JSON.parse(body);
 				data=JSON.parse(body);
@@ -550,8 +588,8 @@ webapprouter
   var params=requestparameters.getPostParameters(req);
   try{
     params.street=params.addressline1+" "+params.addressline2;
-    console.log('https://maps.googleapis.com/maps/api/geocode/json?address='+params.street+',+'+params.city+',+'+params.state);
-	  request('https://maps.googleapis.com/maps/api/geocode/json?address='+params.street+',+'+params.city+',+'+params.state, function (error, response, body) {
+    console.log('https://maps.googleapis.com/maps/api/geocode/json?address='+params.zipcode);
+	  request('https://maps.googleapis.com/maps/api/geocode/json?address='+params.zipcode, function (error, response, body) {
 		  if (!error && response.statusCode == 200) {
 				var data=JSON.parse(body);
 				data=JSON.parse(body);
@@ -625,6 +663,7 @@ webapprouter
   });
   */
 })
+
 .get('/webapp/employees/',function(req,res,next){
   employee.get().then(function(employees){
     res.json({rc:0,data:employees});
@@ -635,8 +674,8 @@ webapprouter
     var params=requestparameters.getPostParameters(req);
     try{
       params.street=params.addressline1+" "+params.addressline2;
-      console.log('https://maps.googleapis.com/maps/api/geocode/json?address='+params.street+',+'+params.city+',+'+params.state);
-  	  request('https://maps.googleapis.com/maps/api/geocode/json?address='+params.street+',+'+params.city+',+'+params.state, function (error, response, body) {
+      console.log('https://maps.googleapis.com/maps/api/geocode/json?address='+params.zipcode);
+  	  request('https://maps.googleapis.com/maps/api/geocode/json?address='+params.zipcode, function (error, response, body) {
   		  if (!error && response.statusCode == 200) {
   				var data=JSON.parse(body);
   				data=JSON.parse(body);
@@ -686,8 +725,8 @@ webapprouter
     var params=requestparameters.getPostParameters(req);
     try{
       params.street=params.addressline1+" "+params.addressline2;
-      console.log('https://maps.googleapis.com/maps/api/geocode/json?address='+params.street+',+'+params.city+',+'+params.state);
-  	  request('https://maps.googleapis.com/maps/api/geocode/json?address='+params.street+',+'+params.city+',+'+params.state, function (error, response, body) {
+      console.log('https://maps.googleapis.com/maps/api/geocode/json?address='+params.zipcode);
+  	  request('https://maps.googleapis.com/maps/api/geocode/json?address='+params.zipcode, function (error, response, body) {
   		  if (!error && response.statusCode == 200) {
   				var data=JSON.parse(body);
   				data=JSON.parse(body);
@@ -768,5 +807,200 @@ webapprouter
     res.json({rc:0,data:customer});
   });
 })
+.get('/webapp/markets/',function(req,res,next){
+  market.get().then(function(markets){
+    res.json({rc:0,data:markets});
+  });
+})
+.get('/webapp/markets.json',function(req,res,next){
+  market.getBasicOnly().then(function(markets){
+    res.json({rc:0,data:markets});
+  });
+})
+.post('/webapp/markets/',function(req,res,next){
+    var newmarketid=0;
+    var params=requestparameters.getPostParameters(req);
+	try{
+    params.street=params.addressline1+" "+params.addressline2;
+    console.log('https://maps.googleapis.com/maps/api/geocode/json?address='+params.zipcode);
+	  request('https://maps.googleapis.com/maps/api/geocode/json?address='+params.zipcode, function (error, response, body) {
+		  if (!error && response.statusCode == 200) {
+				var data=JSON.parse(body);
+				data=JSON.parse(body);
+				if(data && data['results']){
+					if(data['results'].length >0){
+
+						if(data.results[0]['geometry'] && data.results[0]['formatted_address']){
+							if(data.results[0]['geometry']['location']){
+                console.log(data.results[0]);
+								var _requestedaddress=data.results[0].formatted_address;
+								var ll=data.results[0].address_components.length-1;
+								params.latitude=data.results[0].geometry.location.lat;
+								params.longitude=data.results[0].geometry.location.lng
+								params.zipcode=params.zipcode;
+                params.addressline1=params.addressline1;
+                params.addressline2=params.addressline2;
+								params.formattedaddress=data.results[0].formatted_address;
+								params.isprimary=1;
+
+								market.create({
+									name:params.name
+								}).then(function(_newmarket){
+									newmarketid=_newmarket.id;
+									market.addContact(_newmarket,{
+									  name:params.contactname,
+									  isprimary:1
+									}).then(function(_newmarketcontact){
+										market.addAddressBook(_newmarket,params).then(function(_newmarketaddress){
+										  res.json({rc:0,message:'success market is addedd',MarketId:newmarketid});
+										}).catch(function(err){
+										  market.destory(_newmarket).then(function(err) {
+											res.json({rc: -1, message: "Please Enter Valid Address", details: err.message});
+										  });
+										});
+									}).catch(function(err){
+									  market.destory(_newmarketcontact).then(function(err){
+										res.json({rc:-1,message:'Valid Contact Name is not provided',details:err.message});
+									  });
+									})
+								}).catch(function(err){
+								  res.json({rc:-1,message:'Valid Market Name is not provided',details:err.message});
+								});
+
+							}
+						}
+					}
+				}
+		  }else{
+			//res.status(404).json({rc:-1,message:'service not avaliable due to internal error occurred '});
+			res.status(500).json({rc:-1,message:'service not avaliable !!!'});
+		  }
+		});
+	}catch(error){
+		console.log(error);
+		res.status(500).json({rc:-1,message:'service not avaliable due to internal error occurred '});
+	}
+})
+.get('/webapp/markets/:id/vendors/',function(req,res,next){
+  vendor.get().then(function(vendor){
+    res.json({rc:0,data:vendor});
+  }).catch(function(err){
+    res.json({rc:-1,message:'no market found',details:err.message});
+  });
+})
+.get('/webapp/markets/:id/',function(req,res,next){
+  market.getById(req.params.id).then(function(markets){
+    res.json({rc:0,data:markets});
+  }).catch(function(err){
+    res.json({rc:-1,message:'no market found',details:err.message});
+  });
+})
+.put('/webapp/markets/:id/disable',function(req,res,next){
+  market.disable(req.params.id).then(function(market){
+    res.json({rc:0,data:market});
+  });
+})
+.put('/webapp/markets/:id/enable',function(req,res,next){
+  market.enable(req.params.id).then(function(market){
+    res.json({rc:0,data:market});
+  });
+})
+.put('/webapp/markets/:id',function(req,res,next){
+  var params=requestparameters.getPostParameters(req);
+  try{
+    params.street=params.addressline1+" "+params.addressline2;
+    console.log('https://maps.googleapis.com/maps/api/geocode/json?address='+params.zipcode);
+	  request('https://maps.googleapis.com/maps/api/geocode/json?address='+params.zipcode, function (error, response, body) {
+		  if (!error && response.statusCode == 200) {
+				var data=JSON.parse(body);
+				data=JSON.parse(body);
+				if(data && data['results']){
+					if(data['results'].length >0){
+						if(data.results[0]['geometry'] && data.results[0]['formatted_address']){
+							if(data.results[0]['geometry']['location']){
+								var _requestedaddress=data.results[0].formatted_address;
+								var ll=data.results[0].address_components.length-1;
+								params.latitude=data.results[0].geometry.location.lat;
+								params.longitude=data.results[0].geometry.location.lng
+								params.zipcode=data.results[0].address_components[ll].long_name;
+                params.addressline1=params.addressline1;
+                params.addressline2=params.addressline2;
+								params.formattedaddress=data.results[0].formatted_address;
+								params.isprimary=1;
+								market.update(req.params.id,{
+									name:params.name
+								}).then(function(rv){
+                market.updateContact(req.params.id,params.ContactId,{name:params.ContactName}).then(function(rcc){
+                    market.updateContactAddressBook(params.ContactId,params.ContactAddressBookId,params).then(function(acc){
+                      res.json({rc:0,message:'success market is upated'});
+                    }).catch(function(err){
+                      res.json({rc:-3,message:'error market address not upated'});
+                    });
+                }).catch(function(err){
+                  res.json({rc:-2,message:'error market contact/address not upated'});
+                });
+                  /*
+									newmarketid=_newmarket.id;
+									market.addContact(_newmarket,{
+									  name:params.contactname,
+									  isprimary:1
+									}).then(function(_newmarketcontact){
+										market.addContactAddressBook(_newmarketcontact,params).then(function(_newmarketcontact){
+										  res.json({rc:0,message:'success market is addedd',MarketId:newmarketid});
+										}).catch(function(err){
+										  market.destory(_newmarket).then(function(err) {
+											res.json({rc: -1, message: "Please Enter Valid Address", details: err.message});
+										  });
+										});
+									}).catch(function(err){
+									  market.destory(_newmarketcontact).then(function(err){
+										res.json({rc:-1,message:'Valid Contact Name is not provided',details:err.message});
+									  });
+									})
+                  */
+								}).catch(function(err){
+								  res.json({rc:-1,message:'Valid Market Name is not provided',details:err.message});
+								});
+
+							}
+						}
+					}
+				}
+		  }else{
+			//res.status(404).json({rc:-1,message:'service not avaliable due to internal error occurred '});
+			res.status(500).json({rc:-1,message:'service not avaliable !!!'});
+		  }
+		});
+	}catch(error){
+		console.log(error);
+		res.status(500).json({rc:-1,message:'service not avaliable due to internal error occurred '});
+	}
+  /*
+  market.update(req.params.id,params).then(function(result){
+    res.json({rc:0,message:'market details are updated',details:result});
+  }).catch(function(err){
+    console.log(err);
+    res.json({rc:-1,message:'error occurred while updating market',details:err.message});
+  });
+  */
+  })
+  .post('/webapp/markets/:id/vendors/:vendorid',function(req,res,next){
+    var params=requestparameters.getPostParameters(req);
+    market.addVendor(req.params.id,req.params.vendorid).then(function(market){
+      res.json({rc:0,data:{MarketId:market.MarketId,VendorId:market.VendorId}});
+    }).catch(function(err){
+      console.log(err);
+      res.json({rc:-1,message:'error occurred while updating market',details:err.message});
+    });
+  })
+  .put('/webapp/markets/:id/vendors/:vendorid',function(req,res,next){
+    var params=requestparameters.getPostParameters(req);
+      market.updateVendor(req.params.id,params.oldmarketid,req.params.vendorid).then(function(market){
+        res.json({rc:0,data:{MarketId:req.params.id,VendorId:req.params.vendorid}});
+      }).catch(function(err){
+         console.log(err);
+        res.json({rc:-1,message:'error occurred while updating market',details:err.message});
+      });
+  })
 ;
 module.exports = webapprouter;

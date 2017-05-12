@@ -1,24 +1,24 @@
 {
   "development": {
-    "username": "sposuser",
+    "username": "spos",
     "password": "shiladitya123",
-    "database": "spos_test",
+    "database": "spos",
     "host": "127.0.0.1",
     "port": "5432",
     "dialect": "postgres"
   },
   "test": {
-    "username": "sposuser",
+    "username": "spos",
     "password": "shiladitya123",
-    "database": "spos_test",
+    "database": "spos",
     "host": "127.0.0.1",
     "port": "5432",
     "dialect": "postgres"
   },
   "production": {
-    "username": "sposuser",
+    "username": "spos",
     "password": "shiladitya123",
-    "database": "spos_test",
+    "database": "spos",
     "host": "127.0.0.1",
     "port": "5432",
     "dialect": "postgres"

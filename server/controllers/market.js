@@ -10,6 +10,7 @@ var Market = {
     'get':function(options){
        return new Promise(function(resolve,reject) {
            models.Market.findAll({
+<<<<<<< HEAD
             // include:[
             //       {
             //         model: models.MarketAddressBook,
@@ -40,6 +41,20 @@ var Market = {
 
 
             console.log(markets);
+=======
+            include:[
+                  {
+                    model: models.MarketAddressBook,
+                    attributes:["id","phone","formattedaddress","city","zipcode"],order:'id desc'
+                  },                  
+                  {
+                    model: models.MarketContact,
+                    attributes:["id","name"],order:'id desc'
+                  },                  
+                ],
+             attributes:["id","name","isdeleted"]
+           }).then(function (markets) {
+>>>>>>> 4240e34b80b48e6a653bae38bf45e279953df1c9
                resolve(markets);
            }).catch(function (error) {
                reject(error);
@@ -53,7 +68,15 @@ var Market = {
                   {
                     model: models.MarketAddressBook,
                     attributes:["id","phone","formattedaddress","city","zipcode"],order:'id desc'
+<<<<<<< HEAD
                   }                  
+=======
+                  },                  
+                  {
+                    model: models.MarketContact,
+                    attributes:["id","name"],order:'id desc'
+                  },                  
+>>>>>>> 4240e34b80b48e6a653bae38bf45e279953df1c9
                 ],
             where:{
                     isdeleted:0
@@ -238,9 +261,12 @@ var Market = {
     },
     'updateMarketAddressBook':function(marketid,id,values){
         return new Promise(function(resolve,reject) {
+<<<<<<< HEAD
             if(values.isdeleted==undefined){
                 values.isdeleted=0;
             }
+=======
+>>>>>>> 4240e34b80b48e6a653bae38bf45e279953df1c9
             models.MarketAddressBook.update(values,{where:{MarketId: marketid,id:id}}).then(function(affectedrows){
                 if(affectedrows<=0){
                     throw new Error("Market Address Not Found");
@@ -338,6 +364,7 @@ var Market = {
             });
         });
 */    
+<<<<<<< HEAD
     'getVendors':function(id){
         return new Promise(function(resolve,reject) {
             models.Market.findOne({
@@ -361,6 +388,8 @@ var Market = {
             })
         });
     }, 
+=======
+>>>>>>> 4240e34b80b48e6a653bae38bf45e279953df1c9
     'addVendor':function(marketid,vendorid){
         return new Promise(function(resolve,reject) {
             models.Market.findOne({

@@ -25,6 +25,7 @@ module.exports = function(sequelize, DataTypes) {
           Vendor.hasMany(models.VendorContact,{onDelete: 'cascade', hooks: true });
           Vendor.hasMany(models.VendorAddressBook,{onDelete: 'cascade', hooks: true });
           Vendor.belongsToMany(models.Product, {through:models.ProductVendor});
+          Vendor.belongsToMany(models.Market, {through:models.MarketVendor});          
       }
     }
   });

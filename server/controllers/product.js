@@ -37,8 +37,7 @@ var Product = {
                     },
                     {
                       model: models.Vendor, attributes:["id","name"]
-                    },
-					
+                    }
                 ],
                 attributes:["id","name","model","category","subcategory","type"]
                 ,where: {id: id}
@@ -252,7 +251,81 @@ var Product = {
           reject(error);
         });
       });
-    }
+    },
+    /*
+            include:[
+                  {
+                    model: models.VendorContact,
+                    include:{
+                      model:models.VendorContactAddressBook,
+                        attributes:["phone","formattedaddress","city","zipcode"],order:'id desc'
+                    },attributes:["id","isprimary"]
+                  },
+                ],
+             attributes:["id","name","isdeleted"]
+
+                     ,include:{
+                          model:models.ProductImage
+                         ,attributes:["filename"]
+                         ,where:{isdeleted:0}
+                     }
+             
+
+    */
+    'getRecommendation':function(id){
+        return new Promise(function(resolve,reject){
+            models.ProductRecommendation.findAll({
+                include:[{
+                     model:models.Product
+                     ,include:[{
+                         model:models.ProductImage,attributes:["filename"]
+                     },{
+                        model: models.Inventory,
+                        attributes:["id","instock","restock","serialnumber","unitprice"]
+                     }]
+                     ,attributes:["id","name","model","category","subcategory","type"]
+                     ,where:{status:1}
+                }]
+                ,attributes:["ProductId"]
+                ,where:{
+                    ProductId: id
+                }
+            }).then(function(pr){
+                    resolve(pr);
+            }).catch(function(error){
+                console.log(error);
+                reject(error);
+            });
+        });
+    },
+    'addRecommendation':function(id,target_product_id){
+        return new Promise(function(resolve,reject){
+            models.ProductRecommendation.create({
+                ProductId:id,
+                LinkProductId:target_product_id
+            }).then(function(pr){
+                    resolve(pr);
+            }).catch(function(error){
+                console.log(error);
+                reject(error);
+            });
+        });
+    },
+    'deleteRecommendation':function(id,target_product_id){
+        return new Promise(function(resolve,reject){
+            models.ProductRecommendation.destroy({
+                where:{
+                    ProductId:id,
+                    LinkProductId:target_product_id
+                }
+            }).then(function(affectedRows){
+                    resolve(affectedRows);
+            }).catch(function(error){
+                console.log(error);
+                reject(error);
+            });
+        });
+    }    
 }
 
 module.exports = Product;
