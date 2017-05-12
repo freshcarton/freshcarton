@@ -1,0 +1,17 @@
+{
+    // forever config file
+    "uid": "server",
+    "append": true,
+    "watch": true,
+    "watchIgnoreDotFiles": null,
+    "watchIgnorePatterns": "{\\.git,logs,node_modules,tmp}/**",
+    "script": "bin/www",
+    "sourceDir": "/home/ec2-user/apps/freshcarton/freshcarton/server/",
+    "logFile": "/home/ec2-user/apps/freshcarton/freshcarton/server/log/forever.log",
+    "outFile": "/home/ec2-user/apps/freshcarton/freshcarton/server/log/forever.out.log",
+    "errFile": "/home/ec2-user/apps/freshcarton/freshcarton/server/log/forever.err.log",
+    "spinSleepTime":1000,
+    "minUptime":1000
+}
+
+//.foreverignore

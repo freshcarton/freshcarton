@@ -1,0 +1,298 @@
+<section class="content-header">
+      <h1>
+        {{market.primary.name}}
+		<small>{{market.primary.address}}</small>
+      </h1>
+	<ol class="breadcrumb">
+        <li><a ui-sref="app.user.markets({usertype: user.usertype,userid:user.id})"><i class="fa fa-male"></i> Markets</a></li>
+        <li class="active">Market</li>
+     </ol>
+
+</section>
+<section class="content">
+      <div class="row">
+        <div class="col-md-4 hidden-md hidden-sm hidden-xs">
+          <div class="box box-success">
+            <div class="box-header with-border">
+              <h3 class="box-title">{{market.primary.name}}</h3>
+            </div>
+            <div class="box-body">
+              <strong><i class="fa fa-book margin-r-5"></i> Address</strong>
+              <p class="text-muted">
+                {{market.primary.addressline1}}
+                {{market.primary.addressline2}}
+                {{market.primary.city}}
+                , California
+              </p>
+
+              <hr>
+
+              <strong><i class="fa fa-map-marker margin-r-5"></i> Location</strong>
+              <p class="text-muted">{{market.primary.address}}</p>
+              <hr>
+
+              <strong><i class="fa fa-pencil margin-r-5"></i> Contact</strong>
+              <p class="text-muted">{{market.primary.phone}}</p>
+
+              <hr>
+              <button class="btn btn-primary btn-block" ng-show="showNewVendorForm==false" ng-click="addNewVendorForm()">Add Vendor</button>
+            </div>
+          </div>
+          <div class="box box-primary" ng-show="showNewVendorForm==true">
+            <div class="box-header with-border">
+              <h3 class="box-title">New Vendor</h3>
+            </div>
+            <div class="box-body">
+							<form class="form-horizontal" ng-submit="create(newvendor)" >
+								<div class="form-group">
+									<div class="col-sm-9">
+										<input type="text" class="form-control" ng-model="newvendor.name" required placeholder="Vendor Name"/>
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="col-sm-9">
+										<input type="text" class="form-control" ng-model="newvendor.contactname" required placeholder="Contact Name"/>
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="col-sm-9">
+										<input type="text" class="form-control" ng-model="newvendor.addressline1" required placeholder="Street"/>
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="col-sm-9">
+										<input type="text" class="form-control" ng-model="newvendor.addressline2" placeholder="Apt, Suite, etc"/>
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="col-sm-9">
+										<input type="text" class="form-control" ng-model="newvendor.city" required placeholder="City"/>
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="col-sm-9">
+										<input type="text" class="form-control" ng-model="newvendor.state" required placeholder="State"/>
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="col-sm-9">
+										<input type="text" class="form-control" ng-model="newvendor.zipcode" required placeholder="Zipcode"/>
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="col-sm-9">
+										<input type="email" class="form-control" ng-model="newvendor.email" required placeholder="Email"/>
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="col-sm-9">
+										<input type="text" class="form-control" ng-model="newvendor.phone" pattern="[0-9]{10}" required placeholder="Phone Number"/>
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="col-sm-9">
+										<div class="btn-group">
+											<button type="submit" class="btn btn-success btn-md">Save&nbsp;</button>
+											<button type="button" class="btn btn-warning btn-md" ng-click="cancelNewVendor()">Cancel</button>
+										</div>
+									</div>
+									<div class="col-sm-4">&nbsp;</div>
+								</div>
+							</form>							
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+          <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+              <li class="active"><a showtab="" href="#vendors" data-toggle="tab" aria-expanded="true">Vendors</a></li>
+							<li class=""><a showtab="" href="#timings" data-toggle="tab" aria-expanded="false">Timings</a></li>
+              <li class=""><a showtab="" href="#settings" data-toggle="tab" aria-expanded="false">Settings</a></li>
+            </ul>
+            <div class="tab-content">
+              <div class="tab-pane active" id="vendors">
+									<!--<div ui-view="vendorproducts"></div>-->
+              </div>
+              <!-- /.tab-pane -->
+
+              <div class="tab-pane" id="settings">
+								<form class="form-horizontal" ng-submit="updateMarket()">
+								<div class="form-group">
+									<label class="col-sm-2 control-label ">Name</label>
+									<div class="col-sm-9">
+										<input type="text" class="form-control" ng-model="backup.name" required/>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label  class="col-sm-2 control-label">Contact Name</label>
+
+									<div class="col-sm-9">
+										<input type="text" class="form-control" ng-model="backup.ContactName" required/>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label  class="col-sm-2 control-label">Street</label>
+
+									<div class="col-sm-9">
+										<input type="text" class="form-control" ng-model="backup.addressline1" required/>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label  class="col-sm-2 control-label">Apt, Suite, etc</label>
+
+									<div class="col-sm-9">
+										<input type="text" class="form-control" ng-model="backup.addressline2" />
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label  class="col-sm-2 control-label">City</label>
+
+									<div class="col-sm-9">
+										<input type="text" class="form-control" ng-model="backup.city" required/>
+									</div>
+								</div>
+								<div class="form-group">
+									<label  class="col-sm-2 control-label">State</label>
+
+									<div class="col-sm-9">
+										<input type="text" class="form-control" ng-model="backup.state" readonly/>
+									</div>
+								</div>
+								<div class="form-group">
+									<label  class="col-sm-2 control-label">Zipcode</label>
+
+									<div class="col-sm-9">
+										<input type="text" class="form-control" ng-model="backup.zipcode" required/>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label  class="col-sm-2 control-label">Email</label>
+
+									<div class="col-sm-9">
+										<input type="email" class="form-control" ng-model="backup.email" required/>
+									</div>
+								</div>
+								<div class="form-group">
+									<label  class="col-sm-2 control-label">Phone Number</label>
+
+									<div class="col-sm-9">
+										<input type="text" class="form-control" ng-model="backup.phone" required/>
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="col-sm-4">&nbsp;</div>
+									<div class="col-sm-4">
+										<div class="btn-group">
+											<button type="submit" class="btn btn-success btn-md">Update&nbsp;</button>
+											<button type="submit" class="btn btn-danger btn-md" ng-click="DisableMarket()" ng-show="backup.isdeleted==0">Disable&nbsp;</button>
+											<button type="submit" class="btn btn-primary btn-md" ng-click="EnableMarket()" ng-show="backup.isdeleted==1">Enable&nbsp;</button>
+											<button type="button" class="btn btn-warning btn-md" ng-click="cancelUpdateMarket()">Cancel</button>
+										</div>
+									</div>
+									<div class="col-sm-4">&nbsp;</div>
+								</div>
+                </form>
+							</div>	
+              <div class="tab-pane" id="timings">
+								<form class="form-horizontal" ng-submit="updateMarketTimes()">
+									<div class="form-group">
+										<label class="col-sm-2 control-label ">Buisness Days</label>
+										<div class="col-sm-2">
+											<div class="checkbox">
+											<label><input type="checkbox" ng-model="backup.business_on_sunday" ng-true-value="1" ng-false-value="0"/>Sunday</label>
+											</div>
+											<div class="checkbox">
+											<label><input type="checkbox"  ng-model="backup.business_on_monday" ng-true-value="1" ng-false-value="0"/>Monday</label>
+											</div>
+											<div class="checkbox">
+											<label><input type="checkbox"  ng-model="backup.business_on_tuesday" ng-true-value="1" ng-false-value="0"/>Tuesday</label>
+											</div>
+											<div class="checkbox">
+											<label><input type="checkbox" ng-model="backup.business_on_wednesday" ng-true-value="1" ng-false-value="0"/>Wednesday</label>
+											</div>
+											<div class="checkbox">
+											<label><input type="checkbox" ng-model="backup.business_on_thrusday" ng-true-value="1" ng-false-value="0"/>Thrusday</label>
+											</div>
+											<div class="checkbox">
+											<label><input type="checkbox" ng-model="backup.business_on_friday" ng-true-value="1" ng-false-value="0"/>Friday</label>
+											</div>
+											<div class="checkbox">
+											<label><input type="checkbox"  ng-model="backup.business_on_saturday" ng-true-value="1" ng-false-value="0"/>Saturday</label>
+											</div>
+										</div>
+										<div class="col-sm-2">
+											<label class="col-sm-2 control-label ">Hours</label>
+										</div>												
+										<div class="col-sm-2">
+											<input class="form-control" ng-model="backup.business_from_time" placeholder="From (eg: 7.00, 7.30)"/><br/>
+											<input class="form-control" ng-model="backup.business_to_time" placeholder="To (eg: 7.00, 7.30)"/>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="col-sm-2 control-label ">Delivery Days</label>
+										<div class="col-sm-2">
+											<div class="checkbox">
+											<label><input type="checkbox" ng-model="backup.delivery_on_sunday" ng-true-value="1" ng-false-value="0"/>Sunday</label>
+											</div>
+											<div class="checkbox">
+											<label><input type="checkbox"  ng-model="backup.delivery_on_monday" ng-true-value="1" ng-false-value="0"/>Monday</label>
+											</div>
+											<div class="checkbox">
+											<label><input type="checkbox"  ng-model="backup.delivery_on_tuesday" ng-true-value="1" ng-false-value="0"/>Tuesday</label>
+											</div>
+											<div class="checkbox">
+											<label><input type="checkbox" ng-model="backup.delivery_on_wednesday" ng-true-value="1" ng-false-value="0"/>Wednesday</label>
+											</div>
+											<div class="checkbox">
+											<label><input type="checkbox" ng-model="backup.delivery_on_thrusday" ng-true-value="1" ng-false-value="0"/>Thrusday</label>
+											</div>
+											<div class="checkbox">
+											<label><input type="checkbox" ng-model="backup.delivery_on_friday" ng-true-value="1" ng-false-value="0"/>Friday</label>
+											</div>
+											<div class="checkbox">
+											<label><input type="checkbox"  ng-model="backup.delivery_on_saturday" ng-true-value="1" ng-false-value="0"/>Saturday</label>
+											</div>
+										</div>
+										<div class="col-sm-2">
+											<label class="col-sm-2 control-label ">Hours</label>
+										</div>												
+										<div class="col-sm-2">
+											<input class="form-control" ng-model="backup.delivery_from_time" placeholder="From (eg: 7.00, 7.30)"/><br/>
+											<input class="form-control" ng-model="backup.delivery_to_time" placeholder="To (eg: 7.00, 7.30)"/>
+										</div>
+									</div>		
+								<div class="form-group">
+									<div class="col-sm-4">&nbsp;</div>
+									<div class="col-sm-4">
+										<div class="btn-group">
+											<button type="submit" class="btn btn-success btn-md">Update&nbsp;</button>
+											<button type="submit" class="btn btn-danger btn-md" ng-click="DisableMarket()" ng-show="backup.isdeleted==0">Disable&nbsp;</button>
+											<button type="submit" class="btn btn-primary btn-md" ng-click="EnableMarket()" ng-show="backup.isdeleted==1">Enable&nbsp;</button>
+											<button type="button" class="btn btn-warning btn-md" ng-click="cancelUpdateMarket()">Cancel</button>
+										</div>
+									</div>
+									<div class="col-sm-4">&nbsp;</div>
+								</div>
+																
+							  </form>		
+
+
+              </div>
+              <!-- /.tab-pane -->
+            </div>
+            <!-- /.tab-content -->
+          </div>
+          <!-- /.nav-tabs-custom -->
+        </div>
+								
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+
+    </section>

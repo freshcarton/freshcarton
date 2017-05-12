@@ -1,0 +1,19 @@
+              <div class="table-responsive">
+                <table class="table no-margin table-striped">
+                  <thead>
+                  <tr>
+                  	<th>Product</th>
+                    <th>Category</th>
+                    <th>Sub category</th>
+                    <th>Measure Unit</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr ng-repeat="product in products">
+                    <td><a ui-sref="app.user.product({usertype: user.usertype,userid:user.id,productid:product.id})">{{product.name}}</a></td>
+                    <td>{{product.type}}</td>
+                    <td>{{product.subcategory}}</td>
+                    <td>{{product.model}}</td>
+                  </tr>                  
+                  </tbody>
+                </table>
