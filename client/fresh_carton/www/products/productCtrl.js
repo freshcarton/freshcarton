@@ -30,7 +30,8 @@ freshMarketApp.controller('productCtrl', function ($scope, $rootScope, $http, $i
                         if(products[pl].ProductImages===null || products[pl].ProductImages.length==0){
                             products[pl].image='img/organic-Food.jpg';
                         }else{
-                            products[pl].image=baseUrl + 'product/images/'+products[pl].ProductImages[0].filename;
+                            //products[pl].image=baseUrl + 'product/images/'+products[pl].ProductImages[0].filename;
+                            products[pl].image='http://api.freshcarton.com/store/api/product/images/'+products[pl].ProductImages[0].filename;
                         }
                     }
                     for (var j in products) {

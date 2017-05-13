@@ -6,7 +6,7 @@
  * @version:            1.0.0
  */
 var freshMarketApp = angular.module('freshMarket', ['ionic','freshMarket.services']);
-var baseUrl = "http://api.freshcarton.com/store/api/";
+var baseUrl = "http://dev.freshcarton.com/store/api/";
 freshMarketApp.run(function ($ionicPlatform,$rootScope, $location) {
     $ionicPlatform.ready(function () {
         if (window.cordova && window.cordova.plugins.Keyboard) {
