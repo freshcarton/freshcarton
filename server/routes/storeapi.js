@@ -10,6 +10,7 @@ var order=require('../controllers/order.js');
 var vendor=require('../controllers/vendor.js');
 var product=require('../controllers/product.js');
 var customer=require('../controllers/customer.js');
+var market=require('../controllers/market.js');
 var router = express.Router();
 var bodyParser = require('body-parser');
 var math = require('mathjs');
@@ -521,6 +522,57 @@ router
 
 	}
 })
+
+.get('/store/api/markets/', function(req, res, next) {
+    //req.query.street == undefined || req.query.city == undefined || req.query.state==undefined
+    if(req.query.zipcode==undefined){
+        res.status(404).json({rc:-1,message:'zipcode not provided'});
+    }else{
+		try{
+		  request('https://maps.googleapis.com/maps/api/geocode/json?address='+req.query.zipcode, function (error, response, body) {
+			  if (!error && response.statusCode == 200) {
+					var data=JSON.parse(body);
+					data=JSON.parse(body);
+					if(data && data['results']){
+						if(data['results'].length >0){
+							if(data.results[0]['geometry'] && data.results[0]['formatted_address']){
+								if(data.results[0]['geometry']['location']){
+									var _requestedaddress=data.results[0].formatted_address;
+									market.getMarketsForAPI({ lat: data.results[0].geometry.location.lat,lng: data.results[0].geometry.location.lng}).then(function(vendors){
+										res.json({rc:0,vendors:vendors,requestedaddress:{address:_requestedaddress}});
+									}).catch(function(err){
+										res.json({rc:-1,message:'invalid details requested',err:err});
+									});
+								}
+							}
+						}
+					}
+			  }else{
+				//res.status(404).json({rc:-1,message:'service not avaliable due to internal error occurred '});
+				res.status(404).json({rc:-1,message:'service not avaliable !!!'});
+			  }
+		  });
+		}catch(error){
+			console.log(error);
+			res.status(404).json({rc:-1,message:'service not avaliable due to internal error occurred '});
+		}
+
+
+	}
+})
+
+.get('/store/api/markets/:id/vendors/', function(req, res, next) {
+    //req.query.street == undefined || req.query.city == undefined || req.query.state==undefined
+    market.getVendors(req.params.id).then(function(vendors){
+        console.log(vendors);
+        res.json({rc:0,vendors:vendors});
+    }).catch(function(err){
+        res.json({rc:-1,vendors:[],message:'invalid details requested',err:err});
+    });
+    
+})
+
+
 .get('/store/api/kiranmath',function(req, res, next) {
 			var _taxAmount=parseFloat(3.98*0.075);
 			var _totalAmounted=parseFloat(4.56+_taxAmount+2+1.0);

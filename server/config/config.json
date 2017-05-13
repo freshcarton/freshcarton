@@ -3,7 +3,11 @@
     "username": "spos",
     "password": "shiladitya123",
     "database": "spos",
+<<<<<<< Updated upstream
     "host": "127.0.0.1",
+=======
+    "host": "52.207.252.78",
+>>>>>>> Stashed changes
     "port": "5432",
     "dialect": "postgres"
   },
@@ -11,7 +15,11 @@
     "username": "spos",
     "password": "shiladitya123",
     "database": "spos",
+<<<<<<< Updated upstream
     "host": "127.0.0.1",
+=======
+    "host": "52.207.252.78",
+>>>>>>> Stashed changes
     "port": "5432",
     "dialect": "postgres"
   },
@@ -19,7 +27,11 @@
     "username": "spos",
     "password": "shiladitya123",
     "database": "spos",
+<<<<<<< Updated upstream
     "host": "127.0.0.1",
+=======
+    "host": "52.207.252.78",
+>>>>>>> Stashed changes
     "port": "5432",
     "dialect": "postgres"
   }

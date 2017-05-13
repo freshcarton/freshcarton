@@ -44,6 +44,19 @@ module.exports = {
         type:Sequelize.STRING,
         allowNull:true
       },
+      latitude:{
+        type:Sequelize.FLOAT,
+        allowNull:true
+      },
+      longitude:{
+        type:Sequelize.FLOAT,
+        allowNull:true
+      },
+      formattedaddress:{
+        type:Sequelize.TEXT,
+        allowNull:true
+      },    
+      
       isprimary:{
         type:Sequelize.INTEGER,
         allowNull:false

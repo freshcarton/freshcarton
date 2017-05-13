@@ -38,6 +38,16 @@ freshMarketApp.config(function ($stateProvider, $urlRouterProvider) {
                 }
             }
         })
+        .state('app.markets', {
+            url: '/markets',
+            cache: false,
+            views: {
+                'menuContent': {
+                    templateUrl: 'markets/markets.html',
+                    controller: 'marketCtrl'
+                }
+            }
+        })
         .state('app.products', {
             url: '/products',
             cache: false,

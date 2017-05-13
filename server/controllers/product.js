@@ -281,7 +281,11 @@ var Product = {
                          model:models.ProductImage,attributes:["filename"]
                      },{
                         model: models.Inventory,
+<<<<<<< Updated upstream
                         attributes:["id","instock","restock","serialnumber","unitprice"]
+=======
+                        attributes:["unitprice"]
+>>>>>>> Stashed changes
                      }]
                      ,attributes:["id","name","model","category","subcategory","type"]
                      ,where:{status:1}
