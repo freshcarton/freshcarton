@@ -1,8 +1,8 @@
 /*
  * Description:         This controller is related to login and registration pop up
- * @author:             Bidyabrata (bidyabrata.biswas@mastiska.com) 
- * @copyright:          Mastiska (http://www.mastiska.com) & aquaAPI LLC (http://www.aquaapi.com)
- * @version:            1.0.0
+ * @author:             Thanuja Bachala (bachalas@gmail.com) 
+ * @copyright:          Fourcontacts (http://www.fourcontacts.com) & Freshcarton LLC (http://www.freshcarton.com)
+ * @version:            2.0.0
  */
 
 freshMarketApp.controller('appCtrl', function ($scope, $ionicModal, $rootScope, $http, $ionicPopup, $timeout,$location) {

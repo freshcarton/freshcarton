@@ -1,9 +1,9 @@
 /*
  * Description:         This controller is related to address validation 
  *                      and redirecting to next vendor listing page
- * @author:             Kiran Kumar Talapaku (kiran.talapaku@gmail.com) 
- * @copyright:          Fresh Carton LLC
- * @version:            1.0.1
+ * @author:             Thanuja Bachala (bachalas@gmail.com) 
+ * @copyright:          Fourcontacts (http://www.fourcontacts.com) & Freshcarton LLC (http://www.freshcarton.com)
+ * @version:            2.0.0
  */
 freshMarketApp.controller('addressCtrl', function ($scope, $rootScope, $location, $http, $ionicPopup, $timeout,$ionicModal) {
     //$scope.loading = true;
@@ -34,16 +34,17 @@ freshMarketApp.controller('addressCtrl', function ($scope, $rootScope, $location
         var city = $scope.address.city;
         var state = $scope.address.state;
         var zipcode = $scope.address.zip;
+        var address = JSON.stringify($scope.address);
         $http({
             method: 'GET',
-            url: baseUrl + 'vendors?zipcode=' + zipcode
+            url: baseUrl + 'markets?zipcode=' + zipcode
         }).then(function (response) {
             if (response.status === 200) {
                 var result = response.data;
                 if (result.rc === 0) {
                     var address = JSON.stringify($scope.address);
                     localStorage.setItem('userAddress', address);
-                    $location.path('app/vendors');
+                    $location.path('app/markets');
                 } else {
                     var alertPopup = $ionicPopup.alert({
                         title: 'Sorry',

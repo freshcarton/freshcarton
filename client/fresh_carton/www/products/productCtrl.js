@@ -1,8 +1,8 @@
 /*
  * Description:         This controller is related to products of selected vendors and adding to cart
- * @author:             Kiran Kumar Talapaku (kiran.talapaku@gmail.com)
- * @copyright:          Fresh Carton LLC
- * @version:            1.0.1
+ * @author:             Thanuja Bachala (bachalas@gmail.com) 
+ * @copyright:          Fourcontacts (http://www.fourcontacts.com) & Freshcarton LLC (http://www.freshcarton.com)
+ * @version:            2.0.0
  */
 freshMarketApp.controller('productCtrl', function ($scope, $rootScope, $http, $ionicModal, $ionicPopup, $timeout,$ionicNavBarDelegate) {
     $scope.loading = true;
@@ -15,7 +15,8 @@ freshMarketApp.controller('productCtrl', function ($scope, $rootScope, $http, $i
         console.log($scope.vendors);
         for (var i in $scope.vendors) {
             (function (vendor, i) {
-                var vendorId = vendor.id;
+                console.log(vendor);
+                var vendorId = vendor.Vendor.id; //vendor.id;
                 var product_url = baseUrl + 'vendors/' + vendorId + '/products';
                 $http({
                     method: 'GET',
@@ -43,11 +44,13 @@ freshMarketApp.controller('productCtrl', function ($scope, $rootScope, $http, $i
                             products[j].incart = 1;
                         }
                         products[j]['vendorDtails'] = {
-                            'id': vendor.id,
-                            "name": vendor.name,
-                            "vendorcontactid": vendor.VendorContacts[0].id,
-                            "vendorcontactaddressbookid": vendor.VendorContacts[0].VendorContactAddressBooks[0].id
+                            'id': vendor.Vendor.id,
+                            "name": vendor.Vendor.name,
+                            "vendorcontactid": 0,//vendor.VendorContacts[0].id,
+                            "vendorcontactaddressbookid": 0 //vendor.VendorContacts[0].VendorContactAddressBooks[0].id
                         };
+                        products[j].baseUrl=baseUrl + 'vendors/' + vendor.Vendor.id + '/products/'+products[j].id;
+                        products[j].recom = undefined;
                     }
                     $scope.vendors[i].products = products;
                     $scope.loading = false;
@@ -64,7 +67,48 @@ freshMarketApp.controller('productCtrl', function ($scope, $rootScope, $http, $i
         }).then(function (modal) {
             $scope.modal = modal;
             $scope.product = product;
-            $scope.modal.show();
+            $scope.modal.show().then(function(scope){
+                if($scope.product.recom == undefined){
+                    $http({
+                        method: 'GET',
+                        crossDomain: true,
+                        url: $scope.product.baseUrl+'/recommendations'
+                    }).then(function (response) {
+                        var result = response.data;
+                        if(result.id==$scope.product.id){
+                            $scope.product.recom=[];
+                            var pl=result.data.length;
+                            var r=0;
+                            while(pl--){
+                                if(result.data[pl].Product != null){
+                                    var recom={
+                                        id:result.data[pl].Product.id,
+                                        name:result.data[pl].Product.name,
+                                        model:result.data[pl].Product.model,
+                                        image:'img/organic-Food.jpg',
+                                        unitprice:0.00
+                                    }    
+                                    if(result.data[pl].Product.ProductImages===null || result.data[pl].Product.ProductImages.length==0){
+                                        recom.image='img/organic-Food.jpg';
+                                    }else{
+                                        recom.image=baseUrl + 'product/images/'+result.data[pl].Product.ProductImages[0].filename;
+                                    }
+
+                                    if(result.data[pl].Product.Inventories===null || result.data[pl].Product.Inventories.length==0){
+                                        recom.unitprice=0.00;
+                                    }else{
+                                        recom.unitprice=result.data[pl].Product.Inventories[0].unitprice;
+                                    }
+
+                                }
+                                if(recom.unitprice>0.00){
+                                    $scope.product.recom.push(recom);
+                                }
+                            }
+                        }
+                    });
+                }
+            });
         });
     };
 
@@ -135,6 +179,7 @@ freshMarketApp.controller('productCtrl', function ($scope, $rootScope, $http, $i
             }, 10000);
         }
         if (product.quantity > 0) {
+            product.incart = 1;
             $scope.cartedItems.cartedItemsId.push(prodId);
             $scope.cartedItems.cartedItems.push(product);
         }

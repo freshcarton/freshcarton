@@ -1,0 +1,33 @@
+<ion-view view-title="{{vendors[0].name || 'Products'}}">
+    <ion-content>
+        <div class="loader" ng-show="loading">
+            <ion-spinner icon="android"></ion-spinner>
+        </div>
+        <div ng-hide="loading">
+            <div class="products" ng-show="dataAvailable" ng-repeat="vendor in vendors">
+                <div class="vendrNm">
+                    <p class="light-color">{{vendor[0].Vendor.name}}</p>
+<!--                     <h1 class="main-header">{{vendor.name}}</h1>
+ -->                </div>
+                <div class="productslist list" ng-repeat="product in vendor.products">
+                    <div class="item item-thumbnail-left">
+                        <a class="products" ng-click="openProductDetails(product)">
+                            <img ng-src="{{product.image}}">
+                        </a>
+
+                        <h2>{{product.name}}</h2>
+                        <p>$ {{product.Inventories[0].unitprice}} / {{product.model}}</p>
+                        <div>
+                            <button class="smlBtn icon ion-android-remove-circle" ng-click="reducProductQuantity(product)"></button>
+                        <span class="quantity">{{product.quantity}} </span>
+                            <button class="smlBtn icon ion-ios-plus" ng-click="incProductQuantity(product)"></button>
+                        </div>
+                        <!--<a class="cartLink ion ion-android-cart"></a>-->
+                        <button class="cartBtn button ion ion-android-cart" ng-click="addToCart(product)"><span ng-show="product.incart==1" style="color:white"> {{product.quantity}}</span></button>
+                    </div>
+                </div>
+            </div>
+            <div  class="nothing-to-show" ng-hide="dataAvailable"> We won't deliver on this area.</div>
+        </div>
+    </ion-content>
+</ion-view>

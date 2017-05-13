@@ -5,11 +5,11 @@
         </div>
         <div ng-hide="loading" class="row responsive-sm">
             <div class="col">
-                <h1 class="main-header icon ion-ios-location"> Delivery Address</h1>
-                <p class="light-color">{{formattedAddress}}</p>
+                 <h1 class="main-header icon ion-ios-location"> {{marketname}}</h1>
+                <!-- <p class="light-color">{{formattedAddress}}</p> -->
                 <ion-list ng-show="dataAvailable" class="splChkBox">
                     <ion-checkbox ng-repeat="vendor in vendors" ng-change="toogleCheckBox(vendor)" ng-model="toogleValues">
-                        <span>{{vendor.name}}</span>
+                        <span>{{vendor.Vendor.name}}</span>
                         <br/>
                         <p class="light-color">{{vendor.formattedaddress}}</p>
                     </ion-checkbox>

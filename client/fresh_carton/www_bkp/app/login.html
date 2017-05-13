@@ -1,0 +1,28 @@
+<ion-modal-view class="themeBg loginPage">
+    <ion-content>
+        <button class="clsBtn icon ion-close-round" ng-click="closeLogin()"></button>
+        <div class="logoWrapper">
+            <img src="img/logo.png">
+        </div>
+        <form name="loginFrm" ng-submit="doLogin()">
+            <div class="errorMsgWrp">
+                <span class="error" ng-if="loginFrm.username.$touched" ng-show="loginFrm.username.$error.required">Email address required</span>
+                <span class="error" ng-show="loginFrm.username.$error.email">Please enter a valid email address</span>
+                <span class="error" ng-if="loginFrm.password.$touched"  ng-show="loginFrm.password.$error.required">Password required</span> 
+            </div>   
+            <div class="list">
+                <label class="item item-input">
+                    <span class="input-label icon ion-ios-person"></span>
+                    <input type="email" name="username" required ng-model="loginData.username" placeholder="Username">
+                </label>
+                <label class="item item-input">
+                    <span class="input-label icon ion-android-lock"></span>
+                    <input type="password" name="password" ng-model="loginData.password" required placeholder="Password">
+                </label>
+                
+                <button class="submitBtn button button-block button-positive" ng-disabled=" loginFrm.username.$invalid || loginFrm.password.$invalid" type="submit">Log in</button>
+                <a ng-click="openRegsiterPopUp()" class="helpGuide">Don't have an account? <span>Register here</span></a>
+            </div>
+        </form>
+    </ion-content>
+</ion-modal-view>

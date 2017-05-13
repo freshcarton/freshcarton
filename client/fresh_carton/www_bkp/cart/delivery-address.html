@@ -1,0 +1,77 @@
+<ion-content class="Daddress">
+    <ion-header-bar class="bar bar-header mainHeader popupPageHeader">
+        <h1 class="title">Delivery</h1>
+        <div class="buttons">
+            <button class="clsBtn icon ion-close-round" ng-click="closeLogin()"></button>
+        </div>
+    </ion-header-bar>
+    <div class="row responsive-sm">
+        <div class="col">
+            <h3>Address</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col rbtn">
+            <div class="BuTn gradients">
+                <i class="gradient icon ion-ios-home"></i>
+                <span>HOME</span>
+            </div>
+        </div>
+        <div class="col rbtn">
+            <a ng-click ="openNewAddress()" class="BuTn">
+                <i class="icon ion-ios-plus-empty"></i>
+                <span>NEW ADDRESS</span>
+            </a>
+        </div>
+    </div>
+    <div class="row responsive-sm">
+        <div class="col">
+            <h3>Delivery Instruction</h3>
+            <select class="gradient">
+                <option>Text / Call me</option>
+            </select>
+            <input type="text">
+        </div>
+    </div>
+    <div class="row responsive-sm">
+        <div class="col">
+            <h3>Payment</h3>
+            <!--            <ion-list class="jhinku">
+                            <ion-radio ng-model="choice" ng-value="'A'">
+                                <div style="font-size:22px;">paypal</div>
+                                <div>Safe payment online</div>
+                                <img src="img/papal.jpg">
+                            </ion-radio>
+                            <ion-radio ng-model="choice" ng-value="'b'">
+                                <div style="font-size:22px;">Visa</div>
+                                <div>Safe payment online</div>
+                                <img src="img/visa.jpg">
+                            </ion-radio>
+                        </ion-list>-->
+            <form class="papalform" action="/" id="my-sample-form" method="post">
+                <div class="row responsive-sm">
+                    <div class="col">
+                        <label for="card-number">Card Number</label>
+                        <div class="papaliframe" id="card-number"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col col-75">
+                        <label for="expiration-date">Expiration Date</label>
+                        <div class="papaliframe" id="expiration-date"></div>
+                    </div>
+                    <div class="col">
+                        <label for="cvv">CVV</label>
+                        <div class="papaliframe" id="cvv"></div>
+                    </div>
+                </div>
+                <div class="row responsive-sm">
+                    <div class="col">
+                        <input style="padding: 10px;" class="button papalsubmit" type="submit" value="Checkout ({{cartAmount}})" />
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</ion-content>
+ 

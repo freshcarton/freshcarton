@@ -1,9 +1,9 @@
 /*
  * Description:         This controller is related to address validation 
  *                      and redirecting to next vendor listing page
- * @author:             Kiran Kumar Talapaku (kiran.talapaku@gmail.com)
- * @copyright:          Fresh Carton LLC
- * @version:            1.0.1
+ * @author:             Thanuja Bachala (bachalas@gmail.com) 
+ * @copyright:          Fourcontacts (http://www.fourcontacts.com) & Freshcarton LLC (http://www.freshcarton.com)
+ * @version:            2.0.0
  */
 freshMarketApp.controller('cartCtrl', function ($scope, $rootScope, $location, $ionicModal, $http, $ionicPopup, $timeout,$ionicNavBarDelegate) {
     $scope.loading = true;
