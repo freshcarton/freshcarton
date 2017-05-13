@@ -905,17 +905,6 @@ webapprouter
     res.json({rc:0,data:market});
   });
 })
-<<<<<<< Updated upstream
-=======
-.put('/webapp/markets/:id/timings',function(req,res,next){
-  var params=requestparameters.getPostParameters(req);
-  market.update(req.params.id,params).then(function(m){
-    res.json({rc:0,message:'success market is upated'});
-  }).catch(function(err){
-    res.json({rc:-2,message:'error market contact/address not upated'});
-  });
-})  
->>>>>>> Stashed changes
 .put('/webapp/markets/:id',function(req,res,next){
   var params=requestparameters.getPostParameters(req);
   try{
@@ -942,16 +931,9 @@ webapprouter
 									name:params.name
 								}).then(function(rv){
                 market.updateContact(req.params.id,params.ContactId,{name:params.ContactName}).then(function(rcc){
-<<<<<<< Updated upstream
                     market.updateContactAddressBook(params.ContactId,params.ContactAddressBookId,params).then(function(acc){
                       res.json({rc:0,message:'success market is upated'});
                     }).catch(function(err){
-=======
-                    market.updateMarketAddressBook(req.params.id,params.ContactAddressBookId,params).then(function(acc){
-                      res.json({rc:0,message:'success market is upated'});
-                    }).catch(function(err){
-                      console.log(err);
->>>>>>> Stashed changes
                       res.json({rc:-3,message:'error market address not upated'});
                     });
                 }).catch(function(err){
