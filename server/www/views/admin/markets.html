@@ -94,27 +94,21 @@
 					<thead>
 						<tr>
 							<th>Market</th>
-<<<<<<< HEAD
 							<th>Next Business Day</th>
 							<th>Next Delivery Day</th>
-=======
 							<th>Address</th>
 							<th>Phone Number</th>
->>>>>>> 4240e34b80b48e6a653bae38bf45e279953df1c9
 						</tr>
 					</thead>
 					<tbody>
 						<tr ng-repeat="market in markets | filter:by_market">
 							<td><a ui-sref="app.user.market({usertype: user.usertype,userid:user.id,marketid:market.id})" ng-class="market.isdeleted==1 ? 'text-danger' :'' ">{{market.name}}</a></td>
-<<<<<<< HEAD
 							<td>
 								{{market.nextBusinessDay}}
 							</td>
 							<td>{{market.nextDeliveryDay}}</td>
-=======
 							<td>{{market.address}}</td>
 							<td>{{market.phone}}</td>
->>>>>>> 4240e34b80b48e6a653bae38bf45e279953df1c9
 						</tr>
 					</tbody>
 				</table>
