@@ -14,7 +14,6 @@ module.exports = function(sequelize, DataTypes) {
               notEmpty: true,
               is: ["^[a-zA-Z0-9 \-\\\/\#\.]+$", 'i']
           }
-<<<<<<< HEAD
       },
       business_on_sunday:{
           type:DataTypes.INTEGER,
@@ -88,9 +87,6 @@ module.exports = function(sequelize, DataTypes) {
           type:DataTypes.INTEGER,
           defaultValue:16.0
       },      
-=======
-      }
->>>>>>> 4240e34b80b48e6a653bae38bf45e279953df1c9
   }, {
     classMethods: {
       associate: function(models) {

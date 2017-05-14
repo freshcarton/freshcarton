@@ -1,11 +1,7 @@
 'use strict';
 module.exports = {
   up: function(queryInterface, Sequelize) {
-<<<<<<< HEAD
-    return queryInterface.createTable('ProductRecommendations', {
-=======
     return queryInterface.createTable('ProductRecommendation', {
->>>>>>> 4240e34b80b48e6a653bae38bf45e279953df1c9
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -35,10 +31,6 @@ module.exports = {
     });
   },
   down: function(queryInterface, Sequelize) {
-<<<<<<< HEAD
-    return queryInterface.dropTable('ProductRecommendations');
-=======
     return queryInterface.dropTable('ProductRecommendation');
->>>>>>> 4240e34b80b48e6a653bae38bf45e279953df1c9
   }
 };

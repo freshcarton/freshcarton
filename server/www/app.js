@@ -195,6 +195,9 @@ angular.module('store.services', [])
     this.update=function(marketid,params){
       return $restservice.put('markets/'+marketid,params);
     };
+    this.updateTimings=function(marketid,params){
+      return $restservice.put('markets/'+marketid+'/timings',params);
+    };
     this.addVendor=function(params){
         return $restservice.post('markets/'+params.marketid+'/vendors/',params);
     };
@@ -1344,7 +1347,10 @@ angular.module('store.controllers', [])
 	'MO MT NE NV NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY').split(' ').map(function (state) {
     return {abbrev: state};
   });
-  $scope.markets=$marketdata.data.data;
+  $scope.markets=[];
+  if($marketdata.data!=undefined){
+    $scope.markets=$marketdata.data.data;
+  }
   $scope.showNewVendorForm=false;
   $scope.showNewVendor=function(){
   	$scope.newvendor = {
@@ -1672,7 +1678,26 @@ angular.module('store.controllers', [])
   	  email: 'na@default',
   	  phone: '',
   	  latitude:0.0,
-  	  longitude:0.0
+  	  longitude:0.0,
+      business_on_sunday:0,
+      business_on_monday:0,
+      business_on_tuesday:0,
+      business_on_wednesday:0,
+      business_on_thrusday:0,
+      business_on_friday:0,
+      business_on_saturday:0,
+      business_from_time:0,
+      business_to_time:0,
+      delivery_on_sunday:0,
+      delivery_on_monday:0,
+      delivery_on_tuesday:0,
+      delivery_on_wednesday:0,
+      delivery_on_thrusday:0,
+      delivery_on_friday:0,
+      delivery_on_saturday:0,
+      delivery_from_time:0,
+      delivery_to_time:0,
+      
   	};
   	$scope.showNewMarketForm=true;
   };
@@ -1714,13 +1739,68 @@ angular.module('store.controllers', [])
 			  email: 'na@default',
 			  phone: '',
 			  latitude:0.0,
-			  longitude:0.0
+			  longitude:0.0,
+      business_on_sunday:0,
+      business_on_monday:0,
+      business_on_tuesday:0,
+      business_on_wednesday:0,
+      business_on_thrusday:0,
+      business_on_friday:0,
+      business_on_saturday:0,
+      business_from_time:0,
+      business_to_time:0,
+      delivery_on_sunday:0,
+      delivery_on_monday:0,
+      delivery_on_tuesday:0,
+      delivery_on_wednesday:0,
+      delivery_on_thrusday:0,
+      delivery_on_friday:0,
+      delivery_on_saturday:0,
+      delivery_from_time:0,
+      delivery_to_time:0,
+        
 	  };
 	  $scope.showNewMarketForm=false;
   };
   function getPrimary(_market) {
+    if(_market ==undefined){
+      return {
+      MarketId: undefined,
+      name:undefined,
+      isdeleted:1,
+      ContactId:undefined,
+      ContactName:'',
+      ContactAddressBookId: undefined,
+      address:'',
+      addressline1: '',
+      addressline2: '',
+      state:'',
+      city: '',
+      country: '',
+      email: '',
+      phone: '',
+      zipcode: undefined,
+      business_on_sunday:0,
+      business_on_monday:0,
+      business_on_tuesday:0,
+      business_on_wednesday:0,
+      business_on_thrusday:0,
+      business_on_friday:0,
+      business_on_saturday:0,
+      business_from_time:0,
+      business_to_time:0,
+      delivery_on_sunday:0,
+      delivery_on_monday:0,
+      delivery_on_tuesday:0,
+      delivery_on_wednesday:0,
+      delivery_on_thrusday:0,
+      delivery_on_friday:0,
+      delivery_on_saturday:0,
+      delivery_from_time:0,
+      delivery_to_time:0,
+    };
+    }
     var _foundprimary = false;
-    var _cnt = _market.MarketAddressBooks.length;
     var _primary = {
       MarketId: _market.id,
       name:_market.name,
@@ -1736,8 +1816,30 @@ angular.module('store.controllers', [])
       country: '',
       email: '',
       phone: '',
-      zipcode: undefined
+      zipcode: undefined,
+      business_on_sunday:0,
+      business_on_monday:0,
+      business_on_tuesday:0,
+      business_on_wednesday:0,
+      business_on_thrusday:0,
+      business_on_friday:0,
+      business_on_saturday:0,
+      business_from_time:0,
+      business_to_time:0,
+      delivery_on_sunday:0,
+      delivery_on_monday:0,
+      delivery_on_tuesday:0,
+      delivery_on_wednesday:0,
+      delivery_on_thrusday:0,
+      delivery_on_friday:0,
+      delivery_on_saturday:0,
+      delivery_from_time:0,
+      delivery_to_time:0,
     };      
+    var _cnt = 0;
+    if(_market.MarketAddressBooks!= undefined){
+      _cnt=_market.MarketAddressBooks.length;
+    }
     
     if (_cnt>0){
       var _i=0;
@@ -1756,7 +1858,26 @@ angular.module('store.controllers', [])
         country: _market.MarketAddressBooks[_i].country,
         email: _market.MarketAddressBooks[_i].email,
         phone: _market.MarketAddressBooks[_i].phone,
-        zipcode: _market.MarketAddressBooks[_i].zipcode
+        zipcode: _market.MarketAddressBooks[_i].zipcode,
+        business_on_sunday:_market.business_on_sunday,
+        business_on_monday:_market.business_on_monday,
+        business_on_tuesday:_market.business_on_tuesday,
+        business_on_wednesday:_market.business_on_wednesday,
+        business_on_thrusday:_market.business_on_thrusday,
+        business_on_friday:_market.business_on_friday,
+        business_on_saturday:_market.business_on_saturday,
+        business_from_time:_market.business_from_time,
+        business_to_time:_market.business_to_time,
+        delivery_on_sunday:_market.delivery_on_sunday,
+        delivery_on_monday:_market.delivery_on_monday,
+        delivery_on_tuesday:_market.delivery_on_tuesday,
+        delivery_on_wednesday:_market.delivery_on_wednesday,
+        delivery_on_thrusday:_market.delivery_on_thrusday,
+        delivery_on_friday:_market.delivery_on_friday,
+        delivery_on_saturday:_market.delivery_on_saturday,
+        delivery_from_time:_market.delivery_from_time,
+        delivery_to_time:_market.delivery_to_time,
+        
       };      
     }
     /*
@@ -1889,10 +2010,28 @@ angular.module('store.controllers', [])
       isdeleted:_data.isdeleted,
       createdAt: _data.createdAt,
       updatedAt: _data.updatedAt,
+      business_on_sunday:0,
+      business_on_monday:0,
+      business_on_tuesday:0,
+      business_on_wednesday:0,
+      business_on_thrusday:0,
+      business_on_friday:0,
+      business_on_saturday:0,
+      business_from_time:0,
+      business_to_time:0,
+      delivery_on_sunday:0,
+      delivery_on_monday:0,
+      delivery_on_tuesday:0,
+      delivery_on_wednesday:0,
+      delivery_on_thrusday:0,
+      delivery_on_friday:0,
+      delivery_on_saturday:0,
+      delivery_from_time:0,
+      delivery_to_time:0,
     };
     $scope.market.primary = angular.copy(_primary);
     $scope.backup = angular.copy(_primary);
-
+    console.log($scope.backup);
     $scope.DisableMarket=function(){
       $marketservice.disable($scope.market.id).success(function(data){
           if(data.rc>=0){
@@ -1922,6 +2061,14 @@ angular.module('store.controllers', [])
           }
         });
     };
+    $scope.updateMarketTimes=function(){
+      $marketservice.updateTimings($scope.market.id,$scope.backup).success(function(data){
+          if(data.rc>=0){
+            $scope.market.primary = angular.copy($scope.backup);
+          }
+        });
+    };
+    
     $scope.newvendor={
             name: '',
             marketid:$scope.market.id,
