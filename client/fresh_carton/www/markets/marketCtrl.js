@@ -10,15 +10,21 @@ freshMarketApp.controller('marketCtrl', function ($scope,$rootScope, $http, $loc
     $scope.loading = true;
     $rootScope.showSearch = false;
     $scope.dataAvailable = false;
+    $scope.formattedAddress='';
+    
+    $scope.selectedValues = [];
+    if (localStorage.getItem("selectedMarket") !== null) {
+        $scope.selectedValues = JSON.parse(localStorage.getItem('selectedMarket'));
+    }
+
     findVendors();
+
     function findVendors() {
         var savedAddress = JSON.parse(localStorage.getItem('userAddress'));
         var street = savedAddress.street;
         var city = savedAddress.city;
         var state = savedAddress.state;
         var zip = savedAddress.zip;
-        $scope.formattedAddress = '';
-
         $http({
             method: 'GET',
             url: baseUrl + 'markets/?zipcode=' + zip
@@ -26,9 +32,31 @@ freshMarketApp.controller('marketCtrl', function ($scope,$rootScope, $http, $loc
             if (response.status === 200) {
                 var result = response.data;
                 if (result.rc === 0) {
-                    $scope.markets = result.vendors;
+                    $scope.formattedAddress= result.requestedaddress.address;
+                    var requestedaddress = result.requestedaddress.address.split(',');
+                    var savedAddress = JSON.parse(localStorage.getItem('userAddress'));
+                    var z=requestedaddress[1].trim().split(" ");
+                        savedAddress.city=requestedaddress[0];
+                        savedAddress.state=z[0];
+                    var address = JSON.stringify(savedAddress);
+                        localStorage.setItem('userAddress', address);
+                        $scope.markets = result.vendors;
+                    //var _vl=$scope.markets.length;
+                    // if (localStorage.getItem("selectedMarket") === null) {
+                    //     while(_vl--){
+                    //         $scope.markets[_vl].checked=false;
+                    //     }
+                    // }else{
+                    //     while(_vl--){
+                    //         $scope.markets[_vl].checked=false;
+                    //         if($scope.selectedValues.id==$scope.markets[_vl].id){
+                    //             $scope.markets[_vl].checked=true;
+                    //             break;
+                    //         }
+                    //     }
+                    // }    
+                    
                     $scope.markets.checked = false;
-                    $scope.formattedAddress = result.requestedaddress.address;
                     $scope.loading = false;
                     $scope.dataAvailable = true;
                 } else {
@@ -61,18 +89,18 @@ freshMarketApp.controller('marketCtrl', function ($scope,$rootScope, $http, $loc
 
     $scope.toogleCheckBox = function (position, markets) {
 
-        angular.forEach(markets, function(subscription, index) {
+        angular.forEach(markets, function(market, index) {
             if (position != index){
-                subscription.checked = false;
+                market.checked = false;
             }
             else
             {
                if ($scope.selectedValues.length == 0) {
-                    $scope.selectedValues.push(subscription);
+                    $scope.selectedValues.push(market);
                 }
                 else{
                     $scope.selectedValues.splice(0, (0 + 1));
-                    $scope.selectedValues.push(subscription);
+                    $scope.selectedValues.push(market);
                 }
                
             }

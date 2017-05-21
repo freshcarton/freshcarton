@@ -10,6 +10,11 @@ freshMarketApp.controller('vendorCtrl', function ($scope,$rootScope, $http, $loc
     $scope.loading = true;
     $rootScope.showSearch = false;
     $scope.dataAvailable = false;
+    $scope.selectedValues = [];
+    
+    if (localStorage.getItem("selectedVendors") !== null) {
+        $scope.selectedValues = JSON.parse(localStorage.getItem('selectedVendors'));
+    }    
     findVendors();
     function findVendors() {
         $scope.market = JSON.parse(localStorage.getItem('selectedMarket'));
@@ -21,7 +26,6 @@ freshMarketApp.controller('vendorCtrl', function ($scope,$rootScope, $http, $loc
         var state = savedAddress.state;
         var zip = savedAddress.zip;
         $scope.formattedAddress = '';
-
         $http({
             method: 'GET',
             url: baseUrl + 'markets/' + marketId + '/vendors'
@@ -33,6 +37,24 @@ freshMarketApp.controller('vendorCtrl', function ($scope,$rootScope, $http, $loc
                     //$scope.formattedAddress = result.requestedaddress.address;
                     $scope.loading = false;
                     $scope.dataAvailable = true;
+                    var _vl=$scope.vendors.length;
+                    if (localStorage.getItem("selectedVendors") === null) {
+                        while(_vl--){
+                            $scope.vendors[_vl].isselected=false;
+                        }
+                    }else{
+                        var _sv=$scope.selectedValues.length;
+                        console.log($scope.selectedValues);
+                        while(_vl--){
+                            $scope.vendors[_vl].isselected=false;
+                            while(_sv--){
+                                if($scope.selectedValues[_sv].id==$scope.vendors[_vl].id){
+                                    $scope.vendors[_vl].isselected=true;
+                                    break;
+                                }
+                            }
+                        }
+                    }    
                 } else {
                     $scope.dataAvailable = false;
                 }
@@ -59,7 +81,8 @@ freshMarketApp.controller('vendorCtrl', function ($scope,$rootScope, $http, $loc
         }
     };
 
-    $scope.selectedValues = [];
+
+    
 
     $scope.toogleCheckBox = function (vendor) {
         
@@ -84,10 +107,14 @@ freshMarketApp.controller('vendorCtrl', function ($scope,$rootScope, $http, $loc
             }
         );*/
 
+        
         var arrIndex = $scope.selectedValues.indexOf(vendor);
-        if (arrIndex === (-1)) {
+        if (arrIndex == -1) {
+            vendor.isselected=true;
             $scope.selectedValues.push(vendor);
         } else {
             $scope.selectedValues.splice(arrIndex, (arrIndex + 1));
         }
-    };});
+    };
+
+});

@@ -59,10 +59,9 @@ freshMarketApp.controller('appCtrl', function ($scope, $ionicModal, $rootScope, 
         var username = $scope.loginData.username;
         var password = $scope.loginData.password;
         var url = baseUrl + 'customer';
-
         var auth_token = btoa(username + ':' + password);
         $http({
-            method: 'GET',
+            method: 'POST',
             headers: {
                 'Authorization': "Basic " + auth_token,
                 'Accept': 'application/json'

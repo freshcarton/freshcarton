@@ -59,6 +59,7 @@ router
   });
 })
 
+
 /*
 .get('/store/api/vendors/',function(req,res,next){
     vendor.getVendorsForAPI().then(function(vendors){

@@ -13,19 +13,12 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 
-
-
 app.use(function(req, res, next) {
-  //res.setHeader("Access-Control-Allow-Methods", "POST, PUT, OPTIONS, DELETE, GET");
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Methods","POST, PUT, OPTIONS, DELETE, GET");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept,x-session-token,Pragma,Cache-Control,If-Modified-Since");
-  next();
+   res.setHeader("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,PATCH,OPTIONS");
+   res.header("Access-Control-Allow-Origin", "*");
+   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept,x-session-token,Pragma,Cache-Control,If-Modified-Since");
+   next();
 });
-
-
-
-
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -89,12 +82,12 @@ app.use(function(err, req, res, next) {
 //    }
 //});
 
-app.use(function(req, res, next) {
-  res.setHeader("Access-Control-Allow-Methods", "POST, PUT, OPTIONS, DELETE, GET");
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept,x-session-token,Pragma,Cache-Control,If-Modified-Since");
-  next();
-});
+// app.use(function(req, res, next) {
+//   res.setHeader("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,PATCH,OPTIONS");
+//   res.header("Access-Control-Allow-Origin", "*");
+//   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept,x-session-token,Pragma,Cache-Control,If-Modified-Since");
+//   next();
+// });
 
 
 /*
@@ -140,5 +133,7 @@ app.use(multer({
   }
 }));
 */
+
+
 
 module.exports = app;

@@ -38,7 +38,7 @@ freshMarketApp.controller('productCtrl', function ($scope, $rootScope, $http, $i
                         var prodId = products[j].id;
                         var indexKey = $scope.cartedItems.cartedItemsId.indexOf(prodId);
                         if (indexKey === (-1)) {
-                            products[j].quantity = 1;
+                            products[j].quantity = 0;
                             products[j].incart = 0;
                         } else {
                             products[j].quantity = $scope.cartedItems.cartedItems[indexKey].quantity;
@@ -120,23 +120,42 @@ freshMarketApp.controller('productCtrl', function ($scope, $rootScope, $http, $i
     };
 
     $scope.reducProductQuantity = function (product) {
-        if (product.quantity <= 1) {
-            product.quantity = 1;
+        if(product.incart==1){
+            var alertPopup = $ionicPopup.alert({
+                title: 'Fresh Carton',
+                template: "Please change quantity in cart"
+            });
+            $timeout(function () {
+                alertPopup.close();
+            }, 10000);
+        }else if (product.quantity <= 0) {
+            product.quantity = 0;
         } else {
             product.quantity--;
         }
+        
     };
 
     $scope.incProductQuantity = function (product) {
-        product.quantity++;
+        if(product.incart==1){
+              var alertPopup = $ionicPopup.alert({
+                title: 'Fresh Carton',
+                template: "Please change quantity in cart"
+            });
+            $timeout(function () {
+                alertPopup.close();
+            }, 10000);
+        }else{
+            product.quantity++;
+        }    
     };
 
     $scope.addToCart = function (product) {
         var prodId = product.id;
         var arrIndex = $scope.cartedItems.cartedItemsId.indexOf(prodId);
         if (arrIndex !== (-1)) { /* not previously added */
-            $scope.cartedItems.cartedItemsId.splice(arrIndex, 1);
-            $scope.cartedItems.cartedItems.splice(arrIndex, 1);
+            // $scope.cartedItems.cartedItemsId.splice(arrIndex, 1);
+            // $scope.cartedItems.cartedItems.splice(arrIndex, 1);
             var alertPopup = $ionicPopup.alert({
                 title: 'Fresh Carton',
                 template: "Product is already added to your cart"
@@ -144,26 +163,29 @@ freshMarketApp.controller('productCtrl', function ($scope, $rootScope, $http, $i
             $timeout(function () {
                 alertPopup.close();
             }, 10000);
+        }else{
+            if (product.quantity > 0) {
+                product.incart = 1;
+                $scope.cartedItems.cartedItemsId.push(prodId);
+                $scope.cartedItems.cartedItems.push(product);
+            }else{
+                product.incart = 0;
+            }
+            var cartAmount = 0;
+            for (var i in $scope.cartedItems.cartedItems) {
+                var prod = $scope.cartedItems.cartedItems[i];
+                var quantity = prod.quantity;
+                var pricePerUnit = prod.Inventories[0].unitprice;
+                cartAmount = cartAmount + (parseFloat(pricePerUnit) * parseInt(quantity));
+            }
+            $scope.cartedItems.cartAmount = cartAmount;
+            $scope.cartedItems.cartCount = $scope.cartedItems.cartedItemsId.length;
+            $rootScope.cartAmount = '$ ' + cartAmount.toFixed(2);
+            $rootScope.cartCount = $scope.cartedItems.cartCount;
+            localStorage.setItem('cartedItems', JSON.stringify($scope.cartedItems));
         }
-        if (product.quantity > 0) {
-            product.incart = 1;
-            $scope.cartedItems.cartedItemsId.push(prodId);
-            $scope.cartedItems.cartedItems.push(product);
-        }
-        var cartAmount = 0;
-        for (var i in $scope.cartedItems.cartedItems) {
-            var prod = $scope.cartedItems.cartedItems[i];
-            var quantity = prod.quantity;
-            var pricePerUnit = prod.Inventories[0].unitprice;
-            cartAmount = cartAmount + (parseFloat(pricePerUnit) * parseInt(quantity));
-        }
-        $scope.cartedItems.cartAmount = cartAmount;
-        $scope.cartedItems.cartCount = $scope.cartedItems.cartedItemsId.length;
-
-        $rootScope.cartAmount = '$ ' + cartAmount.toFixed(2);
-        $rootScope.cartCount = $scope.cartedItems.cartCount;
-        localStorage.setItem('cartedItems', JSON.stringify($scope.cartedItems));
-    };
+        
+    };        
 
     $scope.addToCartFromPouUp = function (product) {
         var prodId = product.id;

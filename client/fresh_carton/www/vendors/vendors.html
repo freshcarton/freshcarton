@@ -8,7 +8,7 @@
                  <h1 class="main-header icon ion-ios-location"> {{marketname}}</h1>
                 <!-- <p class="light-color">{{formattedAddress}}</p> -->
                 <ion-list ng-show="dataAvailable" class="splChkBox">
-                    <ion-checkbox ng-repeat="vendor in vendors" ng-change="toogleCheckBox(vendor)" ng-model="toogleValues">
+                    <ion-checkbox ng-repeat="vendor in vendors" ng-change="toogleCheckBox(vendor)" ng-model="vendor.isselected">
                         <span>{{vendor.Vendor.name}}</span>
                         <br/>
                         <p class="light-color">{{vendor.formattedaddress}}</p>

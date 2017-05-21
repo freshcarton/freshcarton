@@ -18,15 +18,37 @@ freshMarketApp.controller('addressCtrl', function ($scope, $rootScope, $location
 
         }
     } else {
-        var savedAddress = JSON.parse(localStorage.getItem('userAddress'));
-        $scope.address = {
-            addressType:savedAddress.addressType,
-            apt:savedAddress.apt,
-            city: savedAddress.city,
-            state: savedAddress.state,
-            street: savedAddress.street,
-            zip:savedAddress.zip
-        };
+        try{
+            var savedAddress = JSON.parse(localStorage.getItem('userAddress'));
+            $scope.address = {
+                addressType:savedAddress.addressType,
+                apt:savedAddress.apt,
+                city: savedAddress.city,
+                state: savedAddress.state,
+                street: savedAddress.street,
+                zip:savedAddress.zip
+            };
+            localStorage.removeItem('selectedMarket');
+            localStorage.removeItem('selectedVendors');
+            localStorage.removeItem('cartedItems');
+            
+        }    
+        catch(e){
+            console.log(e);
+            $scope.address = {
+                addressType:'',
+                apt:'',
+                city: '',
+                state: '',
+                street: '',
+                zip:''
+            }
+            var address = JSON.stringify($scope.address);
+            localStorage.setItem('userAddress', address);
+             localStorage.removeItem('selectedMarket');
+            localStorage.removeItem('selectedVendors');
+            localStorage.removeItem('cartedItems');            
+        }
     }
     $scope.loading = false;
     $scope.findVendos = function () {
@@ -42,6 +64,7 @@ freshMarketApp.controller('addressCtrl', function ($scope, $rootScope, $location
             if (response.status === 200) {
                 var result = response.data;
                 if (result.rc === 0) {
+                    console.log($scope.address);
                     var address = JSON.stringify($scope.address);
                     localStorage.setItem('userAddress', address);
                     $location.path('app/markets');
