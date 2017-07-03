@@ -17,6 +17,8 @@
     "ejs": "^2.3.4",
     "express": "^4.13.1",
     "express-session": "^1.13.0",
+    "geolib": "^2.0.22",
+    "lodash": "^4.17.4",
     "mathjs": "^3.12",
     "moment": "^2.13.0",
     "morgan": "^1.6.1",

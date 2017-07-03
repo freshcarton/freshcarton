@@ -53,7 +53,7 @@ var Vendor = {
                        var km = geolib.getDistance(
                            {latitude: options.lat, longitude: options.lng},
                            {latitude: vendor.VendorContact[0].VendorContactAddressBook[0].latitude, longitude: vendor.VendorContact[0].VendorContactAddressBook[0].longitude},
-                       )*0.001;
+                       )*0.000621371;
                        km = Math.abs(km);
                        console.log(km);
                        if(options.range>=0 && options.range<=km){
