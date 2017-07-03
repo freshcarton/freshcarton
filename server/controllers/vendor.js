@@ -1,5 +1,6 @@
 'use strict';
-
+var _ = require("lodash");
+var geolib = require("geolib");
 var Promise = require("bluebird");
 
 /** load models **/
@@ -46,7 +47,22 @@ var Vendor = {
              },
              attributes:["id","name"]
            }).then(function (vendors) {
-               resolve(vendors);
+               var _vendors=[];
+               _.map(vendors,function(vendor,index){
+                   if(_.has(vendor,vendor.VendorContact[0].VendorContactAddressBook[0])){
+                       var km = geolib.getDistance(
+                           {latitude: options.lat, longitude: options.lng},
+                           {latitude: vendor.VendorContact[0].VendorContactAddressBook[0].latitude, longitude: vendor.VendorContact[0].VendorContactAddressBook[0].longitude},
+                       )*0.001;
+                       km = Math.abs(km);
+                       console.log(km);
+                       if(options.range>=0 && options.range<=km){
+                           _vendors.push(vendor);
+                       }
+
+                   }
+               });
+               resolve(_vendors);
            }).catch(function (error) {
                reject(error);
            });

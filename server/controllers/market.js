@@ -1,5 +1,6 @@
 'use strict';
-
+var _ = require("lodash");
+var geolib = require("geolib");
 var Promise = require("bluebird");
 
 /** load models **/
@@ -40,6 +41,7 @@ var Market = {
 
 
             console.log(markets);
+
                resolve(markets);
            }).catch(function (error) {
                reject(error);
@@ -60,7 +62,21 @@ var Market = {
              },
              attributes:["id","name"]
            }).then(function (markets) {
-               resolve(markets);
+               var _markets=[];
+               _.map(markets,function(market,index){
+                   console.log(market);
+                   if(_.has(market,market.MarketAddressBook[0])){
+                       var km = geolib.getDistance(
+                           {latitude: options.lat, longitude: options.lng},
+                           {latitude: market.MarketAddressBook[0].latitude, longitude: market.MarketAddressBook[0].longitude},
+                       )*0.001;
+                       km = Math.abs(km);
+                       console.log(km);
+                       if(options.range>=0 && options.range<=km){
+                           _markets.push(market);
+                       }
+                }
+               resolve(_markets);
            }).catch(function (error) {
                reject(error);
            });

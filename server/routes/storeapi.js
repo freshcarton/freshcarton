@@ -501,7 +501,7 @@ router
 							if(data.results[0]['geometry'] && data.results[0]['formatted_address']){
 								if(data.results[0]['geometry']['location']){
 									var _requestedaddress=data.results[0].formatted_address;
-									vendor.getVendorsForAPI({ lat: data.results[0].geometry.location.lat,lng: data.results[0].geometry.location.lng}).then(function(vendors){
+									vendor.getVendorsForAPI({ lat: data.results[0].geometry.location.lat,lng: data.results[0].geometry.location.lng,range:10}).then(function(vendors){
 										res.json({rc:0,vendors:vendors,requestedaddress:{address:_requestedaddress}});
 									}).catch(function(err){
 										res.json({rc:-1,message:'invalid details requested',err:err});
@@ -539,7 +539,7 @@ router
 							if(data.results[0]['geometry'] && data.results[0]['formatted_address']){
 								if(data.results[0]['geometry']['location']){
 									var _requestedaddress=data.results[0].formatted_address;
-									market.getMarketsForAPI({ lat: data.results[0].geometry.location.lat,lng: data.results[0].geometry.location.lng}).then(function(vendors){
+									market.getMarketsForAPI({ lat: data.results[0].geometry.location.lat,lng: data.results[0].geometry.location.lng,range:10}).then(function(vendors){
 										res.json({rc:0,vendors:vendors,requestedaddress:{address:_requestedaddress}});
 									}).catch(function(err){
 										res.json({rc:-1,message:'invalid details requested',err:err});
