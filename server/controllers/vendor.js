@@ -49,20 +49,20 @@ var Vendor = {
            }).then(function (vendors) {
                var _vendors=[];
                _.map(vendors,function(vendor,index){
-                   if(_.has(vendor,vendor.VendorContact[0].VendorContactAddressBook[0])){
+                   if(_.has(vendor,'VendorContact[0].VendorContactAddressBook[0]')){
                        var km = geolib.getDistance(
                            {latitude: options.lat, longitude: options.lng},
-                           {latitude: vendor.VendorContact[0].VendorContactAddressBook[0].latitude, longitude: vendor.VendorContact[0].VendorContactAddressBook[0].longitude},
+                           {latitude: vendor.VendorContact[0].VendorContactAddressBook[0].latitude, longitude: vendor.VendorContact[0].VendorContactAddressBook[0].longitude}
                        )*0.000621371;
                        km = Math.abs(km);
                        console.log(km);
-                       if(options.range>=0 && options.range<=km){
+                       if(options.range>=0 && km<=options.range){
                            _vendors.push(vendor);
                        }
 
                    }
-               });
-               resolve(_vendors);
+                });
+              resolve(_vendors);
            }).catch(function (error) {
                reject(error);
            });

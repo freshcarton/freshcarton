@@ -64,18 +64,18 @@ var Market = {
            }).then(function (markets) {
                var _markets=[];
                _.map(markets,function(market,index){
-                   console.log(market);
-                   if(_.has(market,market.MarketAddressBook[0])){
+                   if(_.has(market,'MarketAddressBooks[0]')){
                        var km = geolib.getDistance(
                            {latitude: options.lat, longitude: options.lng},
-                           {latitude: market.MarketAddressBook[0].latitude, longitude: market.MarketAddressBook[0].longitude},
-                       )*0.000621371;
-                       km = Math.abs(km);
+                           {latitude: market.MarketAddressBooks[0].latitude, longitude: market.MarketAddressBooks[0].longitude}
+                       );
+                       km = Math.abs(km*0.000621371);
                        console.log(km);
-                       if(options.range>=0 && options.range<=km){
+                       if(options.range>=0 && km<=options.range){
                            _markets.push(market);
                        }
-                }
+                    }
+                });
                resolve(_markets);
            }).catch(function (error) {
                reject(error);
